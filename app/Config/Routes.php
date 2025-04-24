@@ -9,6 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('/dashboard', 'Dashboard::index',['filter' => 'auth']);
 $routes->get('/login', 'Login::index');
+$routes->get('/logout', 'Logout::index');
 $routes->get('/register', 'Register::index');
 
 //POST ROUTES ONLY FROM THEIR CONTROLLERS

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>BeeklLogin</title>
+    <title>Beekl Login</title>
     <link rel="stylesheet" href="<?= base_url('css/bootstrap.min.cs');?>">
     <link rel="stylesheet" href="<?= base_url('css/Google-Style-Login--1.css');?>">
     <link rel="stylesheet" href="<?= base_url('css/Google-Style-Login-.css');?>">
@@ -20,9 +20,20 @@
                     <span class="reauth-email"> </span>
                     <input class="form-control" type="email" name="login_email" id="InputForEmail" required="" placeholder="Email address" autofocus="" value="<?= set_value('login_email')?>">
                     <input class="form-control" type="password" name="login_password" id="InputForPassword" required="" placeholder="Password">
-                    <button class="btn btn-primary btn-lg d-block btn-signin w-100" type="submit" style="padding-bottom: 0px;margin-bottom: 0px;">Masuk</button>
-                
-                </div>
+                    <div class="checkbox" style="margin-bottom: 10px;">
+                        <label>
+                            <input type="checkbox" value="remember-me">Ingat saya
+                        </label>
+                    </div>
+                    <button class="btn btn-primary btn-lg d-block btn-signin w-100" type="submit" style="margin-bottom: 10px;">Masuk</button>
+                    <div style="margin-bottom: 30px;">
+                        <a class="forgot-password" href="#">Lupa Password.</a>
+                    </div>
+                    <div style="margin-bottom: 0px;">
+                        <a class="forgot-password" href="/register">Belum punya akun BEEKL? Daftar Disini.</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
