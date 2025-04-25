@@ -99,7 +99,7 @@
         <input
           type="text"
           class="form-control"
-          placeholder="Search BEEKL"
+          placeholder="Search your thoughts"
         />
       </div>
 
