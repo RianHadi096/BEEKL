@@ -7,6 +7,7 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <style>
     body {
@@ -130,9 +131,19 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
             <?php
                 if(session()->get('name')) {
-                    echo '<li><a class="dropdown-item" href="logout">Sign Out</a></li>';
+                    echo '<li><a class="dropdown-item" href="#">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    Post You Might Like
+                    </a></li>';
+                    echo '<li><a class="dropdown-item" href="logout">
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                    Sign Out
+                    </a></li>';
                 } else {
-                    echo '<li><a class="dropdown-item" href="login">Sign In</a></li>';
+                    echo '<li>
+                    <a class="dropdown-item" href="login">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i>
+                    Sign In</a></li>';
                 }
             ?>
         </ul>
@@ -193,7 +204,7 @@
                 />
                 <div>
                   <div class="fw-bold">General Knowledge</div>
-                  <div class="text-muted">Posted by <?php echo session()->get('name')?> • 2y</div>
+                  <div class="text-muted">Posted by Annonymous • 2y</div>
                 </div>
               </div>
               <button class="btn btn-outline-secondary btn-follow">

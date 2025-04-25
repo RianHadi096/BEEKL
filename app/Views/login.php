@@ -25,7 +25,7 @@
                             <input type="checkbox" value="remember-me">Ingat saya
                         </label>
                     </div>
-                    <button class="btn btn-primary btn-lg d-block btn-signin w-100" type="submit" style="margin-bottom: 10px;">Masuk</button>
+                    <button class="btn btn-primary btn-lg d-block w-100" type="submit" style="margin-bottom: 10px;">Masuk</button>
                     <div style="margin-bottom: 30px;">
                         <a class="forgot-password" href="#">Lupa Password.</a>
                     </div>
