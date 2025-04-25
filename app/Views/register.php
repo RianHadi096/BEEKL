@@ -25,7 +25,7 @@
                     <input class="form-control" type="email" name="regist_email" id="InputForEmail" required="" placeholder="Email address" autofocus="" value="<?= set_value('regist_email') ?>">
                     <input class="form-control" type="password" name="regist_password" id="InputForPassword" required="" placeholder="Password">
                     <input class="form-control" type="password" name="confpassword" id="InputForConfPassword" required="" placeholder="Confirm Password">
-                    <button class="btn btn-primary btn-lg d-block btn-signin w-100" type="submit" style="padding-bottom: 0px;margin-bottom: 0px;">Daftar Langsung</button>
+                    <button class="btn btn-primary btn-lg d-block btn-signin w-100" type="submit" style="padding-bottom: 0px;margin-bottom: 0px;background-color: #ff4d00;">Daftar Langsung</button>
                 </form>
             </div>
         </div>
