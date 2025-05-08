@@ -5,13 +5,21 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-//GET ROUTES ONLY FROM THEIR CONTROLLERS
+$session = session();
+
+//GET DATA IN ROUTES FROM THEIR CONTROLLERS
 $routes->get('/', 'Home::index');
-$routes->get('/dashboard', 'Dashboard::index',['filter' => 'auth']);
+//$routes->get('/dashboard', 'Dashboard::index',['filter' => 'auth']);
 $routes->get('/login', 'Login::index');
 $routes->get('/logout', 'Logout::index');
 $routes->get('/register', 'Register::index');
+$routes->get('/profile/(:segment)', 'Home::profile');
+$routes->get('/likePost_atHomePage/(:num)', 'SideMenu::likePost_atHomePage/$1');
+$routes->get('/likePost/(:num)', 'SideMenu::likePost/$1');
+$routes->get('/deletePost/(:num)', 'SideMenu::deletePost/$1');
 
-//POST ROUTES ONLY FROM THEIR CONTROLLERS
+//POST DATA IN ROUTES FROM VIEWS AND THEN DIRECTLY TO THEIR CONTROLLERS
+$routes->post('/post', 'Post::createPostfromHomePage');
+$routes->post('/postfromprofile', 'Post::createPostfromProfilePage');
 $routes->post('/register/save', 'Register::save');
 $routes->post('/login/auth', 'Login::auth');

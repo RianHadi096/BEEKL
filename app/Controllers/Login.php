@@ -10,8 +10,7 @@ class Login extends BaseController
 {
     public function index()
     {
-        helper(['form']);
-        echo view('login');
+        return view('login');
     } 
  
     public function auth()
@@ -25,13 +24,13 @@ class Login extends BaseController
             $pass = $data['password'];
             $verify_pass = password_verify($password, $pass);
             if($verify_pass){
-                $ses_data = [
+                $session_data = [
                     'id'       => $data['id'],
                     'name'     => $data['name'],
                     'email'    => $data['email'],
                     'logged_in'     => TRUE
                 ];
-                $session->set($ses_data);
+                $session->set($session_data);
                 return redirect()->to('/');
             }else{
                 $session->setFlashdata('msg', 'Wrong Password');

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BEEKL • Home</title>
+  <title>BEEKL • <?= $_SESSION['name']?></title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -131,9 +131,9 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
             <?php
                 if(session()->get('name')) {
-                    echo '<li><a class="dropdown-item" href="/profile/'.session()->get('name').'">
-                    <i class="fas fa-user-circle" aria-hidden="true"></i>
-                    Profile
+                    echo '<li><a class="dropdown-item" href="/">
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                    Back to Home
                     </a></li>';
                     echo '<li><a class="dropdown-item" href="logout">
                     <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -213,7 +213,7 @@
             role="document"
         >
             <div class="modal-content">
-                <form action="/post" method="post">
+                <form action="/postfromprofile" method="post" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitleId">
                             Post your content
@@ -263,7 +263,7 @@
                     <div class="modal-footer">
                         <div class="form-group mb-3">
                               <label class="custom-file">
-                                <input type="file" name="images" placeholder="example.jpeg [must be .jpeg/.png]" class="custom-file-input" aria-describedby="fileHelpId">
+                                <input type="file" name="images" type="file" placeholder="example.jpeg [must be .jpeg/.png]" class="custom-file-input" aria-describedby="fileHelpId">
                                 <span class="custom-file-control"></span>
                               </label>
                             </div>    
@@ -294,10 +294,24 @@
     </script>
                 
 
-    <!-- Bagian Konten Tengah -->
-    <section class="col-md-7 mb-4">
-        <?php
-            foreach($postforum as $post) {
+      <!-- Bagian Konten Tengah -->
+        <section class="col-md-7 mb-4">
+            <?php
+                //check if postforum is empty
+                if(empty($postforum)) {
+                    echo '
+                        <div class="alert alert-danger" role="alert">
+                            <p>Tampaknya tidak ada postingan kamu yang bisa kami tampilkan. :( <br>
+                            ------------------------------------------------------------<br>
+                            <b>Solusi</b> : Coba tuliskan posting menurut pikiran kamu. <br>
+                            ------------------------------------------------------------<br>
+                            *Tapi jangan tulis yang aneh-aneh ya. :)</p>
+                            </p>
+                        </div>
+                    ';
+                }else{
+                    //fetch data from postforum
+                foreach($postforum as $post) {
                      //get date from created_at with date,month,year
                     $date = date('d-m-Y', strtotime($post['created_at']));
 
@@ -313,10 +327,7 @@
                     } else {
                         $likes = $post['likes'];
                     }
-                    //if not signed in
-                    if(!session()->get('name')) {
-                        //print data without like button
-                        echo'<!-- Header Post -->
+                    echo'<!-- Header Post -->
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -333,51 +344,7 @@
                                                 <span class="badge bg-secondary">'.$post['genre'].'</span>
                                             </div>
                                             <div class="text-muted">
-                                                Posted by '.$post['name'].' • '.$date.'
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-outline-secondary btn-follow">
-                                        Follow
-                                    </button>
-                                </div>
-                                <!-- Isi Post -->
-                                <p>'.$post['content'].'</p>
-                                '.$image.'
-                                <div class="d-flex text-muted post-actions">
-                                    <div class="me-3">
-                                        <i class="fas fa-thumbs-up"></i>'.$likes.'
-                                    </div>
-                                    <div class="me-3">
-                                        <i class="fas fa-comment"></i>
-                                    </div>
-                                    <div>
-                                        <i class="fas fa-share"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        ';
-                    }else{
-                        //print data with like,comment,and share button
-                        echo'<!-- Header Post -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <img
-                                        src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-                                        class="rounded-circle me-2"
-                                        width="40"
-                                        height="40"
-                                        />
-                                        <div>
-                                            <div class="fw-bold">
-                                                '.$post['titlePost'].'</br>
-                                                <span class="badge bg-secondary">'.$post['genre'].'</span>
-                                            </div>
-                                            <div class="text-muted">
-                                                Posted by '.$post['name'].' • '.$date.'
+                                                Posted by '.$_SESSION['name'].' • '.$date.'
                                             </div>
                                         </div>
                                     </div>
@@ -390,7 +357,7 @@
                                 '.$image.'
                                 <div class="d-flex text-muted post-action m-2">
                                     <div class="me-3">
-                                        <a href="/likePost_atHomePage/'.$post['postID'].'" class="link-primary"><i class="fas fa-thumbs-up me-1"></i></a>'.$likes.'
+                                        <a href="/likePost/'.$post['postID'].'" class="link-primary"><i class="fas fa-thumbs-up me-1"></i></a>'.$likes.'
                                     </div>
                                     <div class="me-3">
                                         <a href="#" class="link-primary"><i class="fas fa-comment me-1"></i></a>
@@ -398,19 +365,21 @@
                                     <div class="me-3">
                                         <a href="#" class="link-primary"><i class="fas fa-share me-1"></i></a>
                                     </div>
+                                    <div class="me-3">
+                                        <a href="/deletePost/'.$post['postID'].'" class="link-danger"><i class="fas fa-trash me-1"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ';
-                    }
-                    
-
                 }
-        ?>
-    </section>
+            }
+
+            ?>
+        </section>
 
       <!-- Sidebar Kanan -->
-    <aside class="col-md-3 mb-4">
+      <aside class="col-md-3 mb-4">
         <div class="card mb-4">
           <div class="card-body">
             <p class="fw-bold">What do you want to ask or share?</p>
@@ -438,7 +407,7 @@
             </div>
           </div>
         </div>
-    </aside>
+      </aside>
     </div>
   </main>
 
