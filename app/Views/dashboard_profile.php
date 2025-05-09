@@ -403,7 +403,7 @@
               <a href="#" class="btn btn-link text-dark">Press</a>
               <a href="#" class="btn btn-link text-dark">Your Ad Choices</a>
               <a href="#" class="btn btn-link text-dark">Guidelines</a>
-              <a href="#" class="btn btn-link text-dark">Grievance Officer</a>
+              
             </div>
           </div>
         </div>
