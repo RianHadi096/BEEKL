@@ -213,7 +213,8 @@
             role="document"
         >
             <div class="modal-content">
-                <form action="/postfromhomepage" method="post" enctype="multipart/form-data">
+                <form action="/postfromhomepage" method="post" enctype="multipart/form-data"><!-- update bug-->
+                    
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitleId">
                             Post your content
