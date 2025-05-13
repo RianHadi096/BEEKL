@@ -213,7 +213,7 @@
             role="document"
         >
             <div class="modal-content">
-                <form action="/postfromprofile" method="post" enctype="multipart/form-data">
+                <form action="/postfromprofilepage" method="post" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitleId">
                             Post your content

@@ -19,7 +19,7 @@ $routes->get('/likePost/(:num)', 'SideMenu::likePost/$1');
 $routes->get('/deletePost/(:num)', 'SideMenu::deletePost/$1');
 
 //POST DATA IN ROUTES FROM VIEWS AND THEN DIRECTLY TO THEIR CONTROLLERS
-$routes->post('/post', 'Post::createPostfromHomePage');
-$routes->post('/postfromprofile', 'Post::createPostfromProfilePage');
+$routes->post('/postfromhomepage', 'Post::createPostfromHomePage');
+$routes->post('/postfromprofilepage', 'Post::createPostfromProfilePage');
 $routes->post('/register/save', 'Register::save');
 $routes->post('/login/auth', 'Login::auth');

@@ -59,6 +59,10 @@ class Post extends BaseController
         $model = new PostModel();
         //upload image
         $image = $this->request->getFile('images');
+        
+
+        //upload image
+        $image = $this->request->getFile('images');
         if($image->isValid()) {
             $filename = $image->getRandomName();
             $image->move('../public/uploads', $filename);
