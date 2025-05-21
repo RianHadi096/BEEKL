@@ -15,37 +15,33 @@ class Login extends BaseController
  
     public function auth()
     {
+        //start session
         $session = session();
-        $model = new UserModel();
-        $email = $this->request->getVar('login_email');
-        $password = $this->request->getVar('login_password');
-        $data = $model->where('email', $email)->first();
-        if($data){
-            $pass = $data['password'];
-            $verify_pass = password_verify($password, $pass);
-            if($verify_pass){
-                $session_data = [
-                    'id'       => $data['id'],
-                    'name'     => $data['name'],
-                    'email'    => $data['email'],
-                    'logged_in'     => TRUE
-                ];
-                $session->set($session_data);
-                return redirect()->to('/');
-            }else{
+        //get variables from the form login
+        $user = $this->request->getPost('login_email_username');
+        $password = $this->request->getPost('login_password');
+        //get the user from the database
+        $userModel = new UserModel();
+        $data = $userModel->where('email', $user)->orWhere('name', $user)->first();
+        //check if the user exists
+        if ($data) {
+            //check if the password is correct
+            if (password_verify($password, $data['password'])) {
+                //set session data
+                $session->set('id', $data['id']);
+                $session->set('name', $data['name']);
+                $session->set('email', $data['email']);
+                //set login true
+                $session->set('isLoggedIn', true);
+                return redirect()->to('/')->with('success', 'Login Successfully');
+            } else {
                 $session->setFlashdata('msg', 'Wrong Password');
-                return redirect()->to('/login');
+                return redirect()->back()->with('error', 'Wrong Password');
             }
-        }else{
-            $session->setFlashdata('msg', 'Email not Found');
-            return redirect()->to('/login');
+        } else {
+            $session->setFlashdata('msg', 'Username not Found or Email not Found');
+            return redirect()->back()->with('error', 'User Not Found');
         }
-    }
- 
-    public function logout()
-    {
-        $session = session();
-        $session->destroy();
-        return redirect()->to('/login');
+
     }
 }

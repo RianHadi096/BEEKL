@@ -294,7 +294,7 @@
     </script>
                 
 
-      <!-- Bagian Konten Tengah -->
+    <!-- Bagian Konten Tengah -->
         <section class="col-md-7 mb-4">
             <?php
                 //check if postforum is empty
@@ -321,12 +321,7 @@
                     } else {
                         $image = '<img src="'.base_url('uploads/'.$post['images']).'" class="card-img-top" alt="...">';
                     }
-                    //Check if likes is null
-                    if($post['likes'] == null) {
-                        $likes = 0;
-                    } else {
-                        $likes = $post['likes'];
-                    }
+                    //Check if post is empty
                     echo'<!-- Header Post -->
                         <div class="card mb-4">
                             <div class="card-body">
@@ -355,15 +350,46 @@
                                 <!-- Isi Post -->
                                 <p>'.$post['content'].'</p>
                                 '.$image.'
-                                <div class="d-flex text-muted post-action m-2">
+                                <div class="d-flex text-muted post-action m-2">';
+                                //count like
+                                $likeCount = $post['likes'];
+                                if($likeCount == 0) {
+                                    $likeCount = "Be the first to like this post";
+                                } else {
+                                    //check if likeCount > 1
+                                    if($likeCount > 1) {
+                                        $likeCount = $post['likes']." people like this post";
+                                    } else {
+                                        $likeCount = $post['likes']." person like this post";
+                                    }
+                                }
+                                //check if user already like the post
+                                $session = session();
+                                $userID = $session->get('id');
+                                $likeModel = new \App\Models\LikeModel();
+                                $like = $likeModel->
+                                where('userID', $userID)
+                                ->where('postID', $post['postID'])
+                                ->first();
+                                if($like) {
+                                    echo '
+                                        <div class="me-3">
+                                            <a href="/unlikePost/'.$post['postID'].'" class="text-decoration-none text-dark"><i class="fa fa-thumbs-up me-1"></i>'.$likeCount.'</a>
+                                        </div>
+                                        ';
+                                } else {
+                                    echo '
+                                        <div class="me-3">
+                                            <a href="/likePost/'.$post['postID'].'" class="text-decoration-none text-dark"><i class="fa fa-thumbs-o-up me-1"></i>'.$likeCount.'</a>
+                                        </div>
+                                    ';
+                                }
+                                echo'
                                     <div class="me-3">
-                                        <a href="/likePost/'.$post['postID'].'" class="link-primary"><i class="fas fa-thumbs-up me-1"></i></a>'.$likes.'
+                                        <a href="#" class="text-decoration-none text-dark"><i class="fas fa-comment me-1"></i></a>
                                     </div>
                                     <div class="me-3">
-                                        <a href="#" class="link-primary"><i class="fas fa-comment me-1"></i></a>
-                                    </div>
-                                    <div class="me-3">
-                                        <a href="#" class="link-primary"><i class="fas fa-share me-1"></i></a>
+                                        <a href="#" class="text-decoration-none text-dark"><i class="fas fa-share me-1"></i></a>
                                     </div>
                                     <div class="me-3">
                                         <a href="/deletePost/'.$post['postID'].'" class="link-danger"><i class="fas fa-trash me-1"></i></a>
@@ -375,7 +401,7 @@
                 }
             }
 
-            ?>
+        ?>
         </section>
 
       <!-- Sidebar Kanan -->

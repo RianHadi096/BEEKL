@@ -298,115 +298,138 @@
     <!-- Bagian Konten Tengah -->
     <section class="col-md-7 mb-4">
         <?php
-            foreach($postforum as $post) {
-                     //get date from created_at with date,month,year
-                    $date = date('d-m-Y', strtotime($post['created_at']));
+        foreach($postforum as $post) {
+            //get date from created_at with date,month,year
+           $date = date('d-m-Y', strtotime($post['created_at']));
 
-                    //Check if image is null
-                    if($post['images'] == null) {
-                        $image = "";
-                    } else {
-                        $image = '<img src="'.base_url('uploads/'.$post['images']).'" class="card-img-top" alt="...">';
-                    }
-                    //Check if likes is null
-                    if($post['likes'] == null) {
-                        $likes = 0;
-                    } else {
-                        $likes = $post['likes'];
-                    }
-                    //if not signed in
-                    if(!session()->get('name')) {
-                        //print data without like button
-                        echo'<!-- Header Post -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <img
-                                        src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-                                        class="rounded-circle me-2"
-                                        width="40"
-                                        height="40"
-                                        />
-                                        <div>
-                                            <div class="fw-bold">
-                                                '.$post['titlePost'].'</br>
-                                                <span class="badge bg-secondary">'.$post['genre'].'</span>
-                                            </div>
-                                            <div class="text-muted">
-                                                Posted by '.$post['name'].' • '.$date.'
-                                            </div>
+           //Check if image is null
+           if($post['images'] == null) {
+               $image = "";
+           } else {
+               $image = '<img src="'.base_url('uploads/'.$post['images']).'" class="card-img-top" alt="...">';
+           }
+           //if not signed in
+           if(!session()->get('name')) {
+               //print data without like button
+               echo'<!-- Header Post -->
+               <div class="card mb-4">
+                   <div class="card-body">
+                       <div class="d-flex justify-content-between align-items-center mb-3">
+                           <div class="d-flex align-items-center">
+                               <img
+                               src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                               class="rounded-circle me-2"
+                               width="40"
+                               height="40"
+                               />
+                               <div>
+                                   <div class="fw-bold">
+                                       '.$post['titlePost'].'</br>
+                                       <span class="badge bg-secondary">'.$post['genre'].'</span>
+                                   </div>
+                                   <div class="text-muted">
+                                       Posted by '.$post['name'].' • '.$date.'
+                                   </div>
+                               </div>
+                           </div>
+                           <button class="btn btn-outline-secondary btn-follow">
+                               Follow
+                           </button>
+                       </div>
+                       <!-- Isi Post -->
+                       <p>'.$post['content'].'</p>
+                       '.$image.'
+                       <div class="d-flex text-muted post-actions">
+                           <div class="me-3">
+                               <i class="fas fa-thumbs-up"></i>'.$post['likes'].'
+                           </div>
+                           <div class="me-3">
+                               <i class="fas fa-comment"></i>
+                           </div>
+                           <div>
+                               <i class="fas fa-share"></i>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               ';
+           }else{
+               //print data with like,comment,and share button
+               echo'<!-- Header Post -->
+               <div class="card mb-4">
+                   <div class="card-body">
+                       <div class="d-flex justify-content-between align-items-center mb-3">
+                           <div class="d-flex align-items-center">
+                               <img
+                               src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                               class="rounded-circle me-2"
+                               width="40"
+                               height="40"
+                               />
+                               <div>
+                                   <div class="fw-bold">
+                                       '.$post['titlePost'].'</br>
+                                       <span class="badge bg-secondary">'.$post['genre'].'</span>
+                                   </div>
+                                   <div class="text-muted">
+                                       Posted by '.$post['name'].' • '.$date.'
+                                   </div>
+                               </div>
+                           </div>
+                           <button class="btn btn-outline-secondary btn-follow">
+                               Follow
+                           </button>
+                       </div>
+                       <!-- Isi Post -->
+                       <p>'.$post['content'].'</p>
+                       '.$image.'
+                       <div class="d-flex text-muted post-action m-2">';
+                                //count like
+                                $likeCount = $post['likes'];
+                                if($likeCount == 0) {
+                                    $likeCount = "Be the first to like this post";
+                                } else {
+                                    //check if likeCount > 1
+                                    if($likeCount > 1) {
+                                        $likeCount = $post['likes']." people like this post";
+                                    } else {
+                                        $likeCount = $post['likes']." person like this post";
+                                    }
+                                }
+                                //check if user already like the post
+                                $session = session();
+                                $userID = $session->get('id');
+                                $likeModel = new \App\Models\LikeModel();
+                                $like = $likeModel->
+                                where('userID', $userID)
+                                ->where('postID', $post['postID'])
+                                ->first();
+                                if($like) {
+                                    echo '
+                                        <div class="me-3">
+                                            <a href="/unlikePost_atHomePage/'.$post['postID'].'" class="text-decoration-none text-dark"><i class="fa fa-thumbs-up me-1"></i>'.$likeCount.'</a>
                                         </div>
-                                    </div>
-                                    <button class="btn btn-outline-secondary btn-follow">
-                                        Follow
-                                    </button>
-                                </div>
-                                <!-- Isi Post -->
-                                <p>'.$post['content'].'</p>
-                                '.$image.'
-                                <div class="d-flex text-muted post-actions">
-                                    <div class="me-3">
-                                        <i class="fas fa-thumbs-up"></i>'.$likes.'
-                                    </div>
-                                    <div class="me-3">
-                                        <i class="fas fa-comment"></i>
-                                    </div>
-                                    <div>
-                                        <i class="fas fa-share"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        ';
-                    }else{
-                        //print data with like,comment,and share button
-                        echo'<!-- Header Post -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <img
-                                        src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-                                        class="rounded-circle me-2"
-                                        width="40"
-                                        height="40"
-                                        />
-                                        <div>
-                                            <div class="fw-bold">
-                                                '.$post['titlePost'].'</br>
-                                                <span class="badge bg-secondary">'.$post['genre'].'</span>
-                                            </div>
-                                            <div class="text-muted">
-                                                Posted by '.$post['name'].' • '.$date.'
-                                            </div>
+                                        ';
+                                } else {
+                                    echo '
+                                        <div class="me-3">
+                                            <a href="/likePost_atHomePage/'.$post['postID'].'" class="text-decoration-none text-dark"><i class="fa fa-thumbs-o-up me-1"></i>'.$likeCount.'</a>
                                         </div>
-                                    </div>
-                                    <button class="btn btn-outline-secondary btn-follow">
-                                        Follow
-                                    </button>
-                                </div>
-                                <!-- Isi Post -->
-                                <p>'.$post['content'].'</p>
-                                '.$image.'
-                                <div class="d-flex text-muted post-action m-2">
-                                    <div class="me-3">
-                                        <a href="/likePost_atHomePage/'.$post['postID'].'" class="link-primary"><i class="fas fa-thumbs-up me-1"></i></a>'.$likes.'
-                                    </div>
-                                    <div class="me-3">
-                                        <a href="#" class="link-primary"><i class="fas fa-comment me-1"></i></a>
-                                    </div>
-                                    <div class="me-3">
-                                        <a href="#" class="link-primary"><i class="fas fa-share me-1"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ';
-                    }
-                    
-
-                }
+                                    ';
+                                }
+                                echo'
+                           <div class="me-3">
+                               <a href="#" class="text-decoration-none text-dark"><i class="fas fa-comment me-1"></i></a>
+                           </div>
+                           <div class="me-3">
+                               <a href="#" class="text-decoration-none text-dark"><i class="fas fa-share me-1"></i></a>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+            ';
+           }
+        }
         ?>
     </section>
 

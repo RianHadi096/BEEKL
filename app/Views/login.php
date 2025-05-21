@@ -52,8 +52,10 @@
                     <p class="profile-name-card"> </p>
                     <p style="text-align: center;">Login untuk akses Beekl</p>
                     <form class="form-signin" style="padding-bottom: 52px;margin-bottom: -34px;" action="/login/auth" method="post">
-                        <span class="reauth-email"> </span>
-                        <input class="form-control" type="email" name="login_email" id="InputForEmail" required="" placeholder="Email address" autofocus="" value="">
+                        <?php if(session()->getFlashdata('msg')){
+                            echo '<div class="alert alert-danger" role="alert" style="margin-bottom: 5px;">'.session()->getFlashdata('msg').'</div>';
+                        }?>
+                        <input class="form-control" type="text" name="login_email_username" id="InputForEmailorUsername" required="" placeholder="Username or Email">
                         <input class="form-control" type="password" name="login_password" id="InputForPassword" required="" placeholder="Password">
                         <div class="checkbox" style="margin-bottom: 10px;">
                             <label>

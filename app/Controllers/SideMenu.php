@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use App\Models\PostModel;
 use App\Models\UserModel;
+use App\Models\LikeModel;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -11,11 +12,25 @@ class SideMenu extends BaseController
     
     public function likePost($id=null)
     {
-        //update the like count
+        
+        //get postID
         $postModel = new PostModel();
         $data['postID']=$postModel->where('postID', $id)->first();
-        $data['postID']['likes'] += 1;
-        $postModel->update($id, $data['postID']);
+
+        //like post
+        $likeModel = new LikeModel();
+        $session = session();
+        $userID = $session->get('id');
+        $data = [
+            'userID' => $userID,
+            'postID' => $id,
+        ];
+        $likeModel->insert($data);
+
+        //count likes
+        $likeCount = $likeModel->where('postID', $id)->countAllResults();
+        $postModel->update($id, ['likes' => $likeCount]);
+
         //return to the profile page with $name
         $session = session();
         $userID = $session->get('id');
@@ -24,13 +39,77 @@ class SideMenu extends BaseController
         $name = $data['userID']['name'];
         return redirect()->to('profile/'.$name)->with('success', 'Post Liked Successfully');
     }
-    public function likePost_atHomePage($id=null)
+    public function unlikePost($id=null)
     {
-        //update the like count
+        //get postID
         $postModel = new PostModel();
         $data['postID']=$postModel->where('postID', $id)->first();
-        $data['postID']['likes'] += 1;
-        $postModel->update($id, $data['postID']);
+
+        //unlike post
+        $likeModel = new LikeModel();
+        $session = session();
+        $userID = $session->get('id');
+        $data = [
+            'userID' => $userID,
+            'postID' => $id,
+        ];
+        $likeModel->where($data)->delete();
+
+        //count likes after unlike
+        $likeCount = $likeModel->where('postID', $id)->countAllResults();
+        $postModel->update($id, ['likes' => $likeCount]);
+        
+        //return to the profile page with $name
+        $session = session();
+        $userID = $session->get('id');
+        $userModel = new UserModel();
+        $data['userID'] = $userModel->where('id', $userID)->first();
+        $name = $data['userID']['name'];
+        return redirect()->to('profile/'.$name)->with('success', 'Post Unliked Successfully');
+    }
+    //unlike post at home page
+    public function unlikePost_atHomePage($id=null){
+        //get postID
+        $postModel = new PostModel();
+        $data['postID']=$postModel->where('postID', $id)->first();
+
+        //unlike post
+        $likeModel = new LikeModel();
+        $session = session();
+        $userID = $session->get('id');
+        $data = [
+            'userID' => $userID,
+            'postID' => $id,
+        ];
+        $likeModel->where($data)->delete();
+
+        //count likes after unlike
+        $likeCount = $likeModel->where('postID', $id)->countAllResults();
+        $postModel->update($id, ['likes' => $likeCount]);
+        
+        //return to the profile page with $name
+        return redirect()->to('/')->with('success', 'Post Unliked Successfully');
+    }
+    public function likePost_atHomePage($id=null)
+    {
+        //get postID
+        $postModel = new PostModel();
+        $data['postID']=$postModel->where('postID', $id)->first();
+
+        //like post
+        $likeModel = new LikeModel();
+        $session = session();
+        $userID = $session->get('id');
+        $data = [
+            'userID' => $userID,
+            'postID' => $id,
+        ];
+        $likeModel->insert($data);
+
+        //count likes
+        $likeCount = $likeModel->where('postID', $id)->countAllResults();
+        $postModel->update($id, ['likes' => $likeCount]);
+
         //return to the profile page with $name
         $session = session();
         $userID = $session->get('id');
