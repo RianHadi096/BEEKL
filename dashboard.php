@@ -85,7 +85,77 @@
     .post-actions i {
       margin-right: 4px;
     }
-  </style>
+    /* Comment Modal */
+    .comment-modal {
+      max-width: 400px;
+      margin: 1.75rem auto;
+    }
+    .comment-modal .modal-content {
+      border-radius: 12px;
+    }
+    .comment-modal .modal-header {
+      border-bottom: none;
+      padding: 1rem;
+    }
+    .comment-modal .modal-body {
+      padding: 0 1rem;
+    }
+    .comment-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .comment-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    .comment-content {
+      flex: 1;
+    }
+    .comment-author {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .comment-text {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .comment-time {
+      color: #999;
+      font-size: 0.8rem;
+    }
+    .comment-input-wrapper {
+      display: flex;
+      gap: 10px;
+      padding: 1rem;
+      border-top: 1px solid #eee;
+    }
+    .comment-input {
+      flex: 1;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: #f0f2f5;
+    }
+    .comment-input:focus {
+      outline: none;
+      background: #e4e6e9;
+    }
+    .send-comment-btn {
+      background: none;
+      border: none;
+      color: #1877f2;
+      cursor: pointer;
+    }
+    .send-comment-btn:hover {
+      color: #0056b3;
+    }
+    </style>
 </head>
 <body>
   <header>
@@ -287,12 +357,6 @@
     </div>
     
     <!-- Optional: Place to the bottom of scripts -->
-    <script>
-        const myModal = new bootstrap.Modal(
-            document.getElementById("modalWritePost"),
-            options,
-        );
-    </script>
                 
 
     <!-- Bagian Konten Tengah -->
@@ -466,11 +530,102 @@
     </div>
   </main>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-  ></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // test template dari figmm
+    document.body.insertAdjacentHTML('beforeend', `
+      <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+          <div class="modal-dialog comment-modal">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="commentModalLabel">Comments</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="comment-list">
+                          <!-- Sample Comments -->
+                          <div class="comment-item">
+                              <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" class="comment-avatar">
+                              <div class="comment-content">
+                                  <div class="comment-author">Zoe</div>
+                                  <div class="comment-text">Gacooorrrrr</div>
+                                  <div class="comment-time">2h</div>
+                              </div>
+                          </div>
+                          <div class="comment-item">
+                              <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" class="comment-avatar">
+                              <div class="comment-content">
+                                  <div class="comment-author">Frank</div>
+                                  <div class="comment-text">Max Winnnnnnnnn</div>
+                                  <div class="comment-time">57m</div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="comment-input-wrapper">
+                          <input type="text" class="comment-input" placeholder="Text">
+                          <button class="send-comment-btn">
+                              <i class="fas fa-paper-plane"></i>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    `);
+
+    // cek nama user yang posting
+    const currentUser = '<?= session()->get('name') ?? 'Anonymous' ?>';
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      const writePostModal = new bootstrap.Modal(document.getElementById('modalWritePost'));
+      
+      
+      const commentModal = new bootstrap.Modal(document.getElementById('commentModal'));
+      const commentInput = document.querySelector('.comment-input');
+      const sendCommentBtn = document.querySelector('.send-comment-btn');
+      
+      // handler tombol komen
+      const commentBtns = document.querySelectorAll('.fas.fa-comment');
+      commentBtns.forEach(btn => {
+        const commentLink = btn.closest('a');
+        if (commentLink) {
+          commentLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            commentModal.show();
+          });
+        }
+      });
+
+      // Handle buat kirim komen
+      sendCommentBtn.addEventListener('click', () => {
+        const commentText = commentInput.value.trim();
+        if (commentText) {
+          const commentList = document.querySelector('.comment-list');
+          const newComment = document.createElement('div');
+          newComment.className = 'comment-item';
+          newComment.innerHTML = `
+            <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" class="comment-avatar">
+            <div class="comment-content">
+                <div class="comment-author">${currentUser}</div>
+                <div class="comment-text">${commentText}</div>
+                <div class="comment-time">Just now</div>
+            </div>
+          `;
+          commentList.insertBefore(newComment, commentList.firstChild);
+          commentInput.value = '';
+        }
+      });
+
+      // bisa pake key enter buat submit
+      commentInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendCommentBtn.click();
+        }
+      });
+    });
+  </script>
 </body>
 </html>.
