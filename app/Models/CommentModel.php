@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PostModel extends Model
+class CommentModel extends Model
 {
-    protected $table            = 'postforum';
-    protected $primaryKey       = 'postID';
+    protected $table            = 'comments';
+    protected $primaryKey       = 'commentID';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['postID','userID','titlePost','content','genre','images','views','likes','comments','created_at'];
+    protected $allowedFields    = ['commentID', 'userID', 'postID', 'content', 'createdAt'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

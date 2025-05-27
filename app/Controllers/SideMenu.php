@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\PostModel;
 use App\Models\UserModel;
 use App\Models\LikeModel;
+use App\Models\CommentModel;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -43,7 +44,7 @@ class SideMenu extends BaseController
     {
         //get postID
         $postModel = new PostModel();
-        $data['postID']=$postModel->where('postID', $id)->first();
+        $data['postID']=$postModel->where('postID', $id);
 
         //unlike post
         $likeModel = new LikeModel();
@@ -58,7 +59,6 @@ class SideMenu extends BaseController
         //count likes after unlike
         $likeCount = $likeModel->where('postID', $id)->countAllResults();
         $postModel->update($id, ['likes' => $likeCount]);
-        
         //return to the profile page with $name
         $session = session();
         $userID = $session->get('id');
@@ -71,7 +71,7 @@ class SideMenu extends BaseController
     public function unlikePost_atHomePage($id=null){
         //get postID
         $postModel = new PostModel();
-        $data['postID']=$postModel->where('postID', $id)->first();
+        $data['postID']=$postModel->where('postID', $id);
 
         //unlike post
         $likeModel = new LikeModel();
@@ -94,7 +94,7 @@ class SideMenu extends BaseController
     {
         //get postID
         $postModel = new PostModel();
-        $data['postID']=$postModel->where('postID', $id)->first();
+        $data['postID']=$postModel->where('postID', $id);
 
         //like post
         $likeModel = new LikeModel();
@@ -133,4 +133,5 @@ class SideMenu extends BaseController
         return redirect()->to('profile/'.$name)->with('success', 'Post Deleted Successfully');
         
     }
+    //add comment at home pa
 }

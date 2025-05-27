@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/escape-html/1.0.3/escape-html.min.js"></script>
+ 
   <style>
     body {
       background-color: #f8f9fa; 
@@ -85,7 +89,77 @@
     .post-actions i {
       margin-right: 4px;
     }
-  </style>
+    /* Comment Modal */
+    .comment-modal {
+      max-width: 400px;
+      margin: 1.75rem auto;
+    }
+    .comment-modal .modal-content {
+      border-radius: 12px;
+    }
+    .comment-modal .modal-header {
+      border-bottom: none;
+      padding: 1rem;
+    }
+    .comment-modal .modal-body {
+      padding: 0 1rem;
+    }
+    .comment-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .comment-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    .comment-content {
+      flex: 1;
+    }
+    .comment-author {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .comment-text {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .comment-time {
+      color: #999;
+      font-size: 0.8rem;
+    }
+    .comment-input-wrapper {
+      display: flex;
+      gap: 10px;
+      padding: 1rem;
+      border-top: 1px solid #eee;
+    }
+    .comment-input {
+      flex: 1;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: #f0f2f5;
+    }
+    .comment-input:focus {
+      outline: none;
+      background: #e4e6e9;
+    }
+    .send-comment-btn {
+      background: none;
+      border: none;
+      color: #1877f2;
+      cursor: pointer;
+    }
+    .send-comment-btn:hover {
+      color: #0056b3;
+    }
+    </style>
 </head>
 <body>
   <header>
@@ -286,12 +360,6 @@
     </div>
     
     <!-- Optional: Place to the bottom of scripts -->
-    <script>
-        const myModal = new bootstrap.Modal(
-            document.getElementById("modalWritePost"),
-            options,
-        );
-    </script>
                 
 
     <!-- Bagian Konten Tengah -->
@@ -311,18 +379,18 @@
                     ';
                 }else{
                     //fetch data from postforum
-                foreach($postforum as $post) {
-                     //get date from created_at with date,month,year
-                    $date = date('d-m-Y', strtotime($post['created_at']));
+                    foreach($postforum as $post) {
+                        //get date from created_at with date,month,year
+                        $date = date('d-m-Y', strtotime($post['created_at']));
 
-                    //Check if image is null
-                    if($post['images'] == null) {
-                        $image = "";
-                    } else {
-                        $image = '<img src="'.base_url('uploads/'.$post['images']).'" class="card-img-top" alt="...">';
-                    }
-                    //Check if post is empty
-                    echo'<!-- Header Post -->
+                        //Check if image is null
+                        if($post['images'] == null) {
+                            $image = "";
+                        } else {
+                            $image = '<img src="'.base_url('uploads/'.$post['images']).'" class="card-img-top" alt="...">';
+                        }
+                        //Check if post is empty
+                        ?><!-- Header Post -->
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -335,11 +403,11 @@
                                         />
                                         <div>
                                             <div class="fw-bold">
-                                                '.$post['titlePost'].'</br>
-                                                <span class="badge bg-secondary">'.$post['genre'].'</span>
+                                                <?= $post['titlePost']?></br>
+                                                <span class="badge bg-secondary"><?php echo $post['genre']?></span>
                                             </div>
                                             <div class="text-muted">
-                                                Posted by '.$_SESSION['name'].' • '.$date.'
+                                                Posted by <?php echo $_SESSION['name']?> • <?php echo $date?>
                                             </div>
                                         </div>
                                     </div>
@@ -348,9 +416,10 @@
                                     </button>
                                 </div>
                                 <!-- Isi Post -->
-                                <p>'.$post['content'].'</p>
-                                '.$image.'
-                                <div class="d-flex text-muted post-action m-2">';
+                                <p><?php $post['content']?></p>
+                                <?php echo $image ?>
+                                <div class="d-flex text-muted post-action m-2">
+                                <?php
                                 //count like
                                 $likeCount = $post['likes'];
                                 if($likeCount == 0) {
@@ -371,23 +440,76 @@
                                 where('userID', $userID)
                                 ->where('postID', $post['postID'])
                                 ->first();
-                                if($like) {
-                                    echo '
+                                if($like) {?>
                                         <div class="me-3">
-                                            <a href="/unlikePost/'.$post['postID'].'" class="text-decoration-none text-dark"><i class="fa fa-thumbs-up me-1"></i>'.$likeCount.'</a>
+                                            <a href="/unlikePost/<?php echo $post['postID']?>" class="text-decoration-none text-dark"><i class="fa fa-thumbs-up me-1"></i><?php echo $likeCount?></a>
                                         </div>
-                                        ';
-                                } else {
-                                    echo '
+                                <?php } else {?>
                                         <div class="me-3">
-                                            <a href="/likePost/'.$post['postID'].'" class="text-decoration-none text-dark"><i class="fa fa-thumbs-o-up me-1"></i>'.$likeCount.'</a>
+                                            <a href="/likePost/<?php echo $post['postID']?>" class="text-decoration-none text-dark"><i class="fa fa-thumbs-o-up me-1"></i><?php echo $likeCount?></a>
                                         </div>
-                                    ';
-                                }
-                                echo'
+                                <?php }?>
                                     <div class="me-3">
-                                        <a href="#" class="text-decoration-none text-dark"><i class="fas fa-comment me-1"></i></a>
+                                                <?php
+                                            //comment count
+                                            $commentCount = $post['comments'];
+                                            if($commentCount == 0) {
+                                                $commentCount = "No one commented yet";
+                                                } else {
+                                                    //check if commentCount > 1
+                                                    if($commentCount > 1) {
+                                                        $commentCount = $post['comments']." people commented";
+                                                    } else {
+                                                        $commentCount = $post['comments']." person commented";
+                                                    }
+                                                }
+                                            
+                                        ?>
+                                            <a href="#" onclick="loadComments(<?= $post['postID'] ?>) id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
+                                                <i class="fas fa-comment me-1"></i><?= $commentCount?>
+                                            </a>
+                                        </div>
+                                        <div class="modal fade" id="commentModal<?php echo $post['postID']?>" tabindex="-1" aria-labelledby="commentModalLabel<?php echo $post['postID']?>" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="commentModalLabel'.$post['postID'].'">Comments from post <?php echo $post['titlePost']?></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <?php
+                                            // check comment count
+                                            $commentModel = new \App\Models\CommentModel();
+                                            $comments = $commentModel->where('postID', $post['postID'])->findAll();
+                                            if(count($comments) == 0) {
+                                                echo '<p class="text-muted">No comments yet.</p>';
+                                            } else {
+                                                echo '<div class="comment-list">';
+                                                foreach($comments as $comment) {
+                                                    //get user data
+                                                    $userModel = new \App\Models\UserModel();
+                                                    $user = $userModel->find($comment['userID']);
+                                                    ?>
+                                                    <div class="comment-item">
+                                                        <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" alt="User Avatar" class="comment-avatar">
+                                                        <div class="comment-content">
+                                                            <div class="comment-author"><?php echo $user['name'] ?></div>
+                                                            <div class="comment-text"><?php echo $comment['content'] ?></div>
+                                                            <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
+                                                        
+                                                            <?php if(session()->get('id') == $comment['userID']) { ?>
+                                                            <a href="/deleteComment/<?php echo $comment['commentID']?>" class="btn btn-danger btn-sm ms-2">Delete</a>
+                                                            <?php } ?>
+                                                        </div>
+                                                    </div>
+                                                <?php }
+                                                echo '</div>';
+                                            }
+                                            ?>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
                                     <div class="me-3">
                                         <a href="#" class="text-decoration-none text-dark"><i class="fas fa-share me-1"></i></a>
                                     </div>
@@ -395,9 +517,18 @@
                                         <a href="/deletePost/'.$post['postID'].'" class="link-danger"><i class="fas fa-trash me-1"></i></a>
                                     </div>
                                 </div>
+                                        <!-- Comment form -->
+                                <form action="/addComment/<?php echo $post['postID'] ?>" method="post">
+                                        <div class="comment-input-wrapper">
+                                        <input type="text" class="comment-input" name="content" placeholder="Add Comment here...">
+                                        <button class="send-comment-btn">
+                                            <i class="fas fa-paper-plane text-black"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    ';
+                    <?php
                 }
             }
 
