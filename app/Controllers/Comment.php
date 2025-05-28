@@ -81,8 +81,13 @@ public function addComment($id=null){
     $commentCount = $commentModel->where('postID', $id)->countAllResults();
     $postModel->update($id, ['comments' => $commentCount]);
 
-    //return to the home page
-    return redirect()->to('/')->with('success', 'Comment Added Successfully');
+        //return to the profile page with $name
+        $session = session();
+        $userID = $session->get('id');
+        $userModel = new UserModel();
+        $data['userID'] = $userModel->where('id', $userID)->first();
+        $name = $data['userID']['name'];
+    return redirect()->to('profile/'.$name)->with('success', 'Comment Added Successfully');
 }
 //delete comment at home page
 public function deleteComment($commentID=null){
@@ -103,11 +108,22 @@ public function deleteComment($commentID=null){
                 $postModel = new PostModel();
                 $commentCount = $commentModel->where('postID', $postID)->countAllResults();
                 $postModel->update($postID, ['comments' => $commentCount]);
-            // Redirect back with success message
-            return redirect()->back()->with('success', 'Comment deleted successfully.');
+                
+                // Redirect back with success message
+                $session = session();
+                $userID = $session->get('id');
+                $userModel = new UserModel();
+                $data['userID'] = $userModel->where('id', $userID)->first();
+                $name = $data['userID']['name'];
+                return redirect()->to('profile/'.$name)->with('success', 'Comment deleted successfully.');
         } else {
             // Redirect back with error message if comment not found
-            return redirect()->back()->with('error', 'Comment not found.');
+            $session = session();
+            $userID = $session->get('id');
+            $userModel = new UserModel();
+            $data['userID'] = $userModel->where('id', $userID)->first();
+            $name = $data['userID']['name'];
+            return redirect()->to('profile/'.$name)->with('error', 'Comment not found.');
         }
         
 }
