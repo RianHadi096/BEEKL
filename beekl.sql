@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 27, 2025 at 06:38 PM
+-- Generation Time: May 28, 2025 at 08:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,6 +34,13 @@ CREATE TABLE `comments` (
   `content` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`commentID`, `postID`, `userID`, `content`, `created_at`) VALUES
+(28, 24, 6, 'wowowowowo', '2025-05-28 06:27:33');
 
 -- --------------------------------------------------------
 
@@ -99,7 +106,7 @@ CREATE TABLE `postforum` (
   `postID` int(5) UNSIGNED NOT NULL,
   `userID` int(5) UNSIGNED NOT NULL,
   `titlePost` text NOT NULL,
-  `content` varchar(1000) NOT NULL,
+  `content` longtext NOT NULL,
   `genre` set('Olahraga','Anime','Others','Politik','Film','Berita','Komedi','Buku','Teknologi','Otomotif') NOT NULL,
   `images` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -127,7 +134,9 @@ INSERT INTO `postforum` (`postID`, `userID`, `titlePost`, `content`, `genre`, `i
 (19, 3, 'test', 'test', 'Olahraga', NULL, '2025-05-13 00:09:10', '2025-05-13 07:09:10', NULL, NULL, 0),
 (20, 3, 'hahahah', 'hihihi', 'Komedi', NULL, '2025-05-13 00:12:43', '2025-05-13 07:12:43', NULL, NULL, 0),
 (21, 3, 'kkkkk', 'kkkkkkk', 'Politik', NULL, '2025-05-15 03:06:55', '2025-05-15 10:06:55', NULL, NULL, 0),
-(22, 6, 'yy', 'yy', 'Olahraga', NULL, '2025-05-26 11:27:50', '2025-05-26 18:29:05', NULL, 1, 0);
+(22, 6, 'yy', 'yy', 'Olahraga', NULL, '2025-05-26 11:27:50', '2025-05-28 05:20:08', NULL, 1, 0),
+(23, 3, 'kawaiiiii', 'hello post', 'Anime', NULL, '2025-05-27 22:09:38', '2025-05-28 05:09:38', NULL, 0, 0),
+(24, 6, 'Toyota Supra', 'The Toyota Supra (Japanese: トヨタ・スープラ, Hepburn: Toyota Sūpura) is a sports car and grand tourer manufactured and developed by the Toyota Motor Corporation beginning in 1978. The name \"supra\" is a definition from the Latin prefix, meaning \"above\", \"to surpass\" or \"go beyond\"', 'Otomotif', '1748413616_e8f6dfb9d960a933a9eb.jpg', '2025-05-27 23:26:56', '2025-05-28 06:27:33', NULL, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -203,7 +212,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `commentID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `commentID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `likes`
@@ -221,7 +230,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `postforum`
 --
 ALTER TABLE `postforum`
-  MODIFY `postID` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `postID` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `users`
