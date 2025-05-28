@@ -615,26 +615,25 @@
             <div class="d-grid gap-2">
                 <!-- Baris 1 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/sport" class="badge bg-secondary text-decoration-none">Sport</a>
-                    <a href="genre/anime" class="badge bg-secondary text-decoration-none">Anime</a>
-                    <a href="genre/politic" class="badge bg-secondary text-decoration-none">Politic</a>
-                    
+                    <a href="genre/Olahraga" class="badge bg-secondary text-decoration-none">Sport</a>
+                    <a href="genre/Anime" class="badge bg-secondary text-decoration-none">Anime</a>
+                    <a href="genre/Politik" class="badge bg-secondary text-decoration-none">Politic</a>
                 </div>
                 <!-- Baris 2 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/movie" class="badge bg-secondary text-decoration-none">Movie</a>
-                    <a href="genre/news" class="badge bg-secondary text-decoration-none">News</a>
-                    <a href="genre/comedy" class="badge bg-secondary text-decoration-none">Comedy</a>
+                    <a href="genre/Film" class="badge bg-secondary text-decoration-none">Movie</a>
+                    <a href="genre/Berita" class="badge bg-secondary text-decoration-none">News</a>
+                    <a href="genre/Komedi" class="badge bg-secondary text-decoration-none">Comedy</a>
                 </div>
                 <!-- Baris 3 -->
                 <div class="d-flex justify-content-between align-item-center">
-                    <a href="genre/book" class="badge bg-secondary text-decoration-none">Book</a>
-                    <a href="genre/automotive" class="badge bg-secondary text-decoration-none">Automotive</a>
-                    <a href="genre/technology" class="badge bg-secondary text-decoration-none">Technology</a>
+                    <a href="genre/Buku" class="badge bg-secondary text-decoration-none">Book</a>
+                    <a href="genre/Otomotif" class="badge bg-secondary text-decoration-none">Automotive</a>
+                    <a href="genre/Teknologi" class="badge bg-secondary text-decoration-none">Technology</a>
                 </div>
                 <!-- Baris 4 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/sport" class="badge bg-secondary text-decoration-none">Others</a>
+                    <a href="genre/Others" class="badge bg-secondary text-decoration-none">Others</a>
                 </div>
             </div>
           </div>

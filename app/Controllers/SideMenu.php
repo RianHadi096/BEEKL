@@ -121,9 +121,16 @@ class SideMenu extends BaseController
     //delete post
     public function deletePost($id=null)
     {
+        //delete comment first
+        $commentModel = new CommentModel();
+        $commentModel->where('postID', $id)->delete();
+        //delete likes
+        $likeModel = new LikeModel();
+        $likeModel->where('postID', $id)->delete();
+        //delete post
         $postModel = new PostModel();
-        $data['postID']=$postModel->where('postID', $id)->first();
-        $postModel->delete($id);
+        $postModel->where('postID', $id)->delete();
+        
         //return to the profile page with $name
         $session = session();
         $userID = $session->get('id');
@@ -133,5 +140,4 @@ class SideMenu extends BaseController
         return redirect()->to('profile/'.$name)->with('success', 'Post Deleted Successfully');
         
     }
-    //add comment at home pa
 }
