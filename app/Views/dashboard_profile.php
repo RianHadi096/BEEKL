@@ -68,6 +68,10 @@
       border: 1px solid #dee2e6;
       border-radius: 8px;
     }
+    .card-left {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+    }
     .card-body img {
       border-radius: 8px;
     }
@@ -244,28 +248,29 @@
     <div class="row">
       <!-- Sidebar Kiri -->
       <aside class="col-md-2 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <nav class="nav flex-column">
-                <a href="/" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Home</a>
-                <a href="#" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Community</a>
-                <?php if(session()->get('name')){
-                    echo '<button type="button" class="btn btn-outline-black me-2 m-1" data-bs-toggle="modal"
-                    data-bs-target="#modalWritePost"><i class="fas fa-pen me-2"></i>Write</button>';
-                }?>
-              <!-- 
-            <a class="nav-link text-dark" href="#"
-                ><i class="fas fa-home me-2"></i>Home</a
-              >
-              <a class="nav-link text-dark" href="#"
-                ><i class="fas fa-users me-2"></i>Community</a
-              >
-              <a class="nav-link text-dark" href="/post"
-                ><i class="fas fa-pen me-2"></i>Write</a
-              >
-              -->
-            </nav>
-          </div>
+      <div class="card-left">
+            <div class="card-body">
+            <p class="fw-bold ">What do you want today?</p>
+                <nav class="nav flex-column">
+                    <a href="/" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Home</a>
+                    <a href="#" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Community</a>
+                    <?php if(session()->get('name')){?>
+                        <a href="compose" class="btn btn-outline-black me-2 m-1" role="button" data-bs-toggle="modal"
+                        data-bs-target="#modalWritePost"><i class="fas fa-pen me-2"></i>Write</a>
+                    <?php }?>
+                <!--
+                <a class="nav-link text-dark" href="#"
+                    ><i class="fas fa-home me-2"></i>Home</a
+                >
+                <a class="nav-link text-dark" href="#"
+                    ><i class="fas fa-users me-2"></i>Community</a
+                >
+                <a class="nav-link text-dark" href="/post"
+                    ><i class="fas fa-pen me-2"></i>Write</a
+                >
+                -->
+                </nav>
+            </div>
         </div>
       </aside>
   
@@ -537,6 +542,7 @@
 
       <!-- Sidebar Kanan -->
       <aside class="col-md-3 mb-4">
+        <!--
         <div class="card mb-4">
           <div class="card-body">
             <p class="fw-bold">What do you want to ask or share?</p>
@@ -547,20 +553,36 @@
             </div>
           </div>
         </div>
+        -->
 
         <!-- Card: Link-Link Tambahan -->
         <div class="card">
           <div class="card-body">
-            <div class="d-grid gap-1">
-              <a href="#" class="btn btn-link text-dark">About</a>
-              <a href="#" class="btn btn-link text-dark">Careers</a>
-              <a href="#" class="btn btn-link text-dark">Terms</a>
-              <a href="#" class="btn btn-link text-dark">Privacy</a>
-              <a href="#" class="btn btn-link text-dark">Advertise</a>
-              <a href="#" class="btn btn-link text-dark">Press</a>
-              <a href="#" class="btn btn-link text-dark">Your Ad Choices</a>
-              <a href="#" class="btn btn-link text-dark">Guidelines</a>
-              
+            <p class="fw-bold">What kind of genres you might like?</p>
+            <div class="d-grid gap-2">
+                <!-- Baris 1 -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="genre/sport" class="badge bg-secondary text-decoration-none">Sport</a>
+                    <a href="genre/anime" class="badge bg-secondary text-decoration-none">Anime</a>
+                    <a href="genre/politic" class="badge bg-secondary text-decoration-none">Politic</a>
+                    
+                </div>
+                <!-- Baris 2 -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="genre/movie" class="badge bg-secondary text-decoration-none">Movie</a>
+                    <a href="genre/news" class="badge bg-secondary text-decoration-none">News</a>
+                    <a href="genre/comedy" class="badge bg-secondary text-decoration-none">Comedy</a>
+                </div>
+                <!-- Baris 3 -->
+                <div class="d-flex justify-content-between align-item-center">
+                    <a href="genre/book" class="badge bg-secondary text-decoration-none">Book</a>
+                    <a href="genre/automotive" class="badge bg-secondary text-decoration-none">Automotive</a>
+                    <a href="genre/technology" class="badge bg-secondary text-decoration-none">Technology</a>
+                </div>
+                <!-- Baris 4 -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="genre/sport" class="badge bg-secondary text-decoration-none">Others</a>
+                </div>
             </div>
           </div>
         </div>
