@@ -38,7 +38,9 @@ class Home extends BaseController
         $session = session();
         $userID = $session->get('id');
         //get all data from postforum with userID
-        $data['postforum'] = $model->where('userID', $userID)->findAll();
+        $data['postforum'] = $model->join('users', 'users.id = postforum.userID')
+                                    ->where('userID', $userID)
+                                    ->findAll();
         //get all data from postforum with comments
         $data['comments'] = $model->select('postforum.*, COUNT(comments.commentID) as commentCount')
             ->join('comments', 'comments.postID = postforum.postID', 'left')

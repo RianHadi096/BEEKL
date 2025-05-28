@@ -374,7 +374,7 @@
                 if(empty($postforum)) {
                     echo '
                         <div class="alert alert-danger" role="alert">
-                            <p>Tampaknya tidak ada postingan kamu yang bisa kami tampilkan. :( <br>
+                            <p>Tampaknya tidak ada postingan kamu/genre kamu yang bisa kami tampilkan. :( <br>
                             ------------------------------------------------------------<br>
                             <b>Solusi</b> : Coba tuliskan posting menurut pikiran kamu. <br>
                             ------------------------------------------------------------<br>
@@ -519,7 +519,7 @@
                                         <a href="#" class="text-decoration-none text-dark"><i class="fas fa-share me-1"></i></a>
                                     </div>
                                     <div class="me-3">
-                                        <a href="/deletePost/<?php echo $post['postID']?>" class="link-danger"><i class="fas fa-trash me-1"></i></a>
+                                        <a href="/deletePost/'.$post['postID'].'" class="link-danger"><i class="fas fa-trash me-1"></i></a>
                                     </div>
                                 </div>
                                         <!-- Comment form -->
@@ -562,25 +562,25 @@
             <div class="d-grid gap-2">
                 <!-- Baris 1 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Olahraga" class="badge bg-secondary text-decoration-none">Sport</a>
-                    <a href="genre/Anime" class="badge bg-secondary text-decoration-none">Anime</a>
-                    <a href="genre/Politik" class="badge bg-secondary text-decoration-none">Politic</a>
+                    <a href="Olahraga" class="badge bg-secondary text-decoration-none">Sport</a>
+                    <a href="Anime" class="badge bg-secondary text-decoration-none">Anime</a>
+                    <a href="Politik" class="badge bg-secondary text-decoration-none">Politic</a>
                 </div>
                 <!-- Baris 2 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Film" class="badge bg-secondary text-decoration-none">Movie</a>
-                    <a href="genre/Berita" class="badge bg-secondary text-decoration-none">News</a>
-                    <a href="genre/Komedi" class="badge bg-secondary text-decoration-none">Comedy</a>
+                    <a href="Film" class="badge bg-secondary text-decoration-none">Movie</a>
+                    <a href="Berita" class="badge bg-secondary text-decoration-none">News</a>
+                    <a href="Komedi" class="badge bg-secondary text-decoration-none">Comedy</a>
                 </div>
                 <!-- Baris 3 -->
                 <div class="d-flex justify-content-between align-item-center">
-                    <a href="genre/Buku" class="badge bg-secondary text-decoration-none">Book</a>
-                    <a href="genre/Otomotif" class="badge bg-secondary text-decoration-none">Automotive</a>
-                    <a href="genre/Teknologi" class="badge bg-secondary text-decoration-none">Technology</a>
+                    <a href="Buku" class="badge bg-secondary text-decoration-none">Book</a>
+                    <a href="Otomotif" class="badge bg-secondary text-decoration-none">Automotive</a>
+                    <a href="Teknologi" class="badge bg-secondary text-decoration-none">Technology</a>
                 </div>
                 <!-- Baris 4 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Others" class="badge bg-secondary text-decoration-none">Others</a>
+                    <a href="Others" class="badge bg-secondary text-decoration-none">Others</a>
                 </div>
             </div>
           </div>
