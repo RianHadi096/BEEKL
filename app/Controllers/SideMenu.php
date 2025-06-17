@@ -5,6 +5,7 @@ use App\Models\PostModel;
 use App\Models\UserModel;
 use App\Models\LikeModel;
 use App\Models\CommentModel;
+use App\Models\NotificationModel;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -31,6 +32,20 @@ class SideMenu extends BaseController
         //count likes
         $likeCount = $likeModel->where('postID', $id)->countAllResults();
         $postModel->update($id, ['likes' => $likeCount]);
+
+        //create message from notifications table
+        $userModel = new UserModel();
+        $data['userID'] = $userModel->where('id', $userID)->first();
+        $name = $data['userID']['name'];
+        $notificationModel = new NotificationModel();
+        $data = [
+            'userID' => $userID,
+            'type' => 'like',
+            'message' => $name.' liked your post',
+            'isRead' => 0,
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
+        $notificationModel->insert($data);
 
         //return to the profile page with $name
         $session = session();
@@ -109,6 +124,20 @@ class SideMenu extends BaseController
         //count likes
         $likeCount = $likeModel->where('postID', $id)->countAllResults();
         $postModel->update($id, ['likes' => $likeCount]);
+
+        //create message from notifications table
+        $userModel = new UserModel();
+        $data['userID'] = $userModel->where('id', $userID)->first();
+        $name = $data['userID']['name'];
+        $notificationModel = new NotificationModel();
+        $data = [
+            'userID' => $userID,
+            'type' => 'like',
+            'message' => $name.' liked your post',
+            'isRead' => 0,
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
+        $notificationModel->insert($data);
 
         //return to the profile page with $name
         $session = session();

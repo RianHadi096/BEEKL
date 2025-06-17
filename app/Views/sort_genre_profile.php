@@ -225,6 +225,39 @@
                 }
             ?>
         </ul>
+        <?php
+            if (session()->get('name')) { // Check if user is logged in
+            // Display notification icon only if user is logged in
+        ?>
+        <div class="dropdown ms-3">
+            <?php
+                //count how many notifications from user
+                $notificationModel = new \App\Models\NotificationModel();
+                $notificationcount = $notificationModel->
+                where('userID', session()->get('id'))
+                ->where('isRead', 0)
+                ->countAllResults();
+            ?>
+            <button
+                class="btn btn-outline-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <i class="fas fa-bell"></i>  <?php echo $notificationcount ?>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <?php
+                    if($notificationcount > 0) {
+                        echo '<li><a class="dropdown-item" href="/notifications">Yeay. You have '.$notificationcount.' new notifications</a></li>';
+                    } else {
+                        echo '<li><a class="dropdown-item" href="/notifications">No new notifications. See if you like</a></li>';
+                    }
+                ?>
+            </ul>
+        </div>
+        <?php }?>
         <div class="dropdown ms-3">
           <button
             class="btn btn-outline-secondary dropdown-toggle"
@@ -233,11 +266,15 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            English
+            <img src="https://flagpedia.net/data/flags/w580/us.webp"
+            alt="Language Icon"
+            class="rounded-circle"
+            width="30"
+            height="30"/> EN
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a class="dropdown-item" href="#">English</a></li>
-            <li><a class="dropdown-item" href="#">Other Language</a></li>
+            <li><a class="dropdown-item" href="/lang_us_en">US English</a></li>
+            <li><a class="dropdown-item" href="/lang_ina">Indonesia</a></li>
           </ul>
         </div>
       </div>
@@ -372,16 +409,13 @@
             <?php
                 //check if postforum is empty
                 if(empty($postforum)) {
-                    echo '
+                    ?>
                         <div class="alert alert-danger" role="alert">
-                            <p>Tampaknya tidak ada postingan kamu/genre kamu yang bisa kami tampilkan. :( <br>
-                            ------------------------------------------------------------<br>
-                            <b>Solusi</b> : Coba tuliskan posting menurut pikiran kamu. <br>
-                            ------------------------------------------------------------<br>
-                            *Tapi jangan tulis yang aneh-aneh ya. :)</p>
-                            </p>
+                            <p class="text-center">Looks like you have no other posts today. :( <br>
+                            ===============================================<br>
+                            <b>Solution</b> : Try to tell your stories, but don't make a your ridiculous post. </p>
                         </div>
-                    ';
+                    <?php
                 }else{
                     //fetch data from postforum
                     foreach($postforum as $post) {
