@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\CommentModel;
 use App\Models\PostModel;
 use App\Models\UserModel;
+use App\Models\NotificationModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Comment extends BaseController
@@ -33,8 +34,24 @@ class Comment extends BaseController
         $commentCount = $commentModel->where('postID', $id)->countAllResults();
         $postModel->update($id, ['comments' => $commentCount]);
 
+        //create a notification message to another user
+        $userModel = new UserModel();
+        $data['userID'] = $userModel->where('id', $userID)->first();
+        $name = $data['userID']['name'];
+        $notificationModel = new NotificationModel();
+        $data = [
+            'userID' => $userID,
+            'type' => 'comment',
+            'message' => $name.' commented on your post',
+            'isRead' => 0,
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
+        $notificationModel->insert($data);
+
         //return to the home page
         return redirect()->to('/')->with('success', 'Comment Added Successfully');
+
+        
     }
     //delete comment at home page
     public function deleteComment_atHomePage($commentID=null){
@@ -62,7 +79,7 @@ class Comment extends BaseController
             return redirect()->back()->with('error', 'Comment not found.');
         }
     }
-//add comment at home page
+//add comment at profile page
 public function addComment($id=null){
     //get postID
     $postModel = new PostModel();
@@ -81,12 +98,26 @@ public function addComment($id=null){
     $commentCount = $commentModel->where('postID', $id)->countAllResults();
     $postModel->update($id, ['comments' => $commentCount]);
 
-        //return to the profile page with $name
-        $session = session();
-        $userID = $session->get('id');
-        $userModel = new UserModel();
-        $data['userID'] = $userModel->where('id', $userID)->first();
-        $name = $data['userID']['name'];
+    //create message from notifications table
+    $userModel = new UserModel();
+    $data['userID'] = $userModel->where('id', $userID)->first();
+    $name = $data['userID']['name'];
+    $notificationModel = new NotificationModel();
+    $data = [
+        'userID' => $userID,
+        'type' => 'comment',
+        'message' => $name.' commented on your post',
+        'isRead' => 0,
+        'created_at' => date('Y-m-d H:i:s'),
+    ];
+    $notificationModel->insert($data);
+
+    //return to the profile page with $name
+    $session = session();
+    $userID = $session->get('id');
+    $userModel = new UserModel();
+    $data['userID'] = $userModel->where('id', $userID)->first();
+    $name = $data['userID']['name'];
     return redirect()->to('profile/'.$name)->with('success', 'Comment Added Successfully');
 }
 //delete comment at home page

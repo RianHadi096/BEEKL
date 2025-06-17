@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BEEKL • <?= $_SESSION['name']?></title>
+  <title>BEEKL • Home</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/escape-html/1.0.3/escape-html.min.js"></script>
- 
+
   <style>
     body {
       background-color: #f8f9fa; 
@@ -163,6 +164,9 @@
     .send-comment-btn:hover {
       color: #0056b3;
     }
+    .comment-indentity{
+        margin-right: 15px;
+    }
     </style>
 </head>
 <body>
@@ -199,65 +203,29 @@
             width="40"
             height="40"/>
             <?php
-                if(session()->get('name')) {
-                    echo session()->get('name');
-                } else {
-                    echo 'Anonymous';
-                }
-            ?>
+                if(session()->get('name')) { ?>
+                    <?php echo session()->get('name'); ?>
+                <?php } else { ?>
+                    <?php echo 'Anonymous'; ?>
+                <?php } ?>
           </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
             <?php
-                if(session()->get('name')) {
-                    echo '<li><a class="dropdown-item" href="/">
-                    <i class="fa fa-home" aria-hidden="true"></i>
-                    Back to Home
-                    </a></li>';
-                    echo '<li><a class="dropdown-item" href="logout">
-                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                if(session()->get('name')) { ?>
+                    <li><a class="dropdown-item" href="/profile/<?=session()->get('name')?>"><i class="fas fa-user-circle" aria-hidden="true"></i>
+                    Profile
+                    </a></li>
+                    <li><a class="dropdown-item" href="logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
                     Sign Out
-                    </a></li>';
-                } else {
-                    echo '<li>
+                    </a></li>
+                <?php } else { ?>
+                    <li>
                     <a class="dropdown-item" href="login">
                     <i class="fa fa-sign-in" aria-hidden="true"></i>
-                    Sign In</a></li>';
-                }
-            ?>
+                    Sign In</a></li>
+                <?php } ?>
+            
         </ul>
-        <?php
-            if (session()->get('name')) { // Check if user is logged in
-            // Display notification icon only if user is logged in
-        ?>
-        <div class="dropdown ms-3">
-            <?php
-                //count how many notifications from user
-                $notificationModel = new \App\Models\NotificationModel();
-                $notificationcount = $notificationModel->
-                where('userID', session()->get('id'))
-                ->where('isRead', 0)
-                ->countAllResults();
-            ?>
-            <button
-                class="btn btn-outline-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton1"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-            >
-                <i class="fas fa-bell"></i>  <?php echo $notificationcount ?>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <?php
-                    if($notificationcount > 0) {
-                        echo '<li><a class="dropdown-item" href="/notifications">Yeay. You have '.$notificationcount.' new notifications</a></li>';
-                    } else {
-                        echo '<li><a class="dropdown-item" href="/notifications">No new notifications. See if you like</a></li>';
-                    }
-                ?>
-            </ul>
-        </div>
-        <?php }?>
         <div class="dropdown ms-3">
           <button
             class="btn btn-outline-secondary dropdown-toggle"
@@ -266,15 +234,11 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="https://flagpedia.net/data/flags/w580/us.webp"
-            alt="Language Icon"
-            class="rounded-circle"
-            width="30"
-            height="30"/> EN
+            English
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a class="dropdown-item" href="/#">US English</a></li>
-            <li><a class="dropdown-item" href="/#">Indonesia</a></li>
+            <li><a class="dropdown-item" href="#">English</a></li>
+            <li><a class="dropdown-item" href="#">Other Language</a></li>
           </ul>
         </div>
       </div>
@@ -285,7 +249,7 @@
     <div class="row">
       <!-- Sidebar Kiri -->
       <aside class="col-md-2 mb-4">
-      <div class="card-left">
+        <div class="card-left">
             <div class="card-body">
             <p class="fw-bold ">What do you want today?</p>
                 <nav class="nav flex-column">
@@ -311,9 +275,9 @@
         </div>
       </aside>
   
-    <!-- Modal Body -->
-    <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-    <div
+        <!-- Modal Body -->
+        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+        <div
         class="modal fade"
         id="modalWritePost"
         tabindex="-1"
@@ -329,7 +293,8 @@
             role="document"
         >
             <div class="modal-content">
-                <form action="/postfromprofilepage" method="post" enctype="multipart/form-data">
+                <form action="/postfromhomepage" method="post" enctype="multipart/form-data"><!-- update bug-->
+                    
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitleId">
                             Post your content
@@ -379,7 +344,7 @@
                     <div class="modal-footer">
                         <div class="form-group mb-3">
                               <label class="custom-file">
-                                <input type="file" name="images" type="file" placeholder="example.jpeg [must be .jpeg/.png]" class="custom-file-input" aria-describedby="fileHelpId">
+                                <input type="file" name="images" placeholder="example.jpeg [must be .jpeg/.png]" class="custom-file-input" aria-describedby="fileHelpId">
                                 <span class="custom-file-control"></span>
                               </label>
                             </div>    
@@ -402,116 +367,91 @@
     </div>
     
     <!-- Optional: Place to the bottom of scripts -->
-                
 
     <!-- Bagian Konten Tengah -->
-        <section class="col-md-7 mb-4">
-            <?php
-                //check if postforum is empty
-                if(empty($postforum)) {
-                    ?>
-                        <div class="alert alert-danger" role="alert">
-                            <p>Looks like you have no other posts today. :( <br>
-                            ------------------------------------------------------------<br>
-                            <b>Solution</b> : Try to tell your stories, <br>
-                            ------------------------------------------------------------<br>
-                            * but don't make a your ridiculous post. </p>
-                            </p>
-                        </div>
-                    <?php
-                }else{
-                    //fetch data from postforum
-                    foreach($postforum as $post) {
-                        //get date from created_at with date,month,year
-                        $date = date('d-m-Y', strtotime($post['created_at']));
+    <section class="col-md-7 mb-4">
 
-                        //Check if image is null
-                        if($post['images'] == null) {
-                            $image = "";
-                        } else {
-                            $image = '<img src="'.base_url('uploads/'.$post['images']).'" class="card-img-top" alt="...">';
-                        }
-                        //Check if post is empty
-                        ?><!-- Header Post -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <img
-                                        src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-                                        class="rounded-circle me-2"
-                                        width="40"
-                                        height="40"
-                                        />
-                                        <div>
-                                            <div class="fw-bold">
-                                                <?= $post['titlePost']?></br>
-                                                <span class="badge bg-secondary"><?php echo $post['genre']?></span>
-                                            </div>
-                                            <div class="text-muted">
-                                                Posted by <?php echo $_SESSION['name']?> • <?php echo $date?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-outline-secondary btn-follow">
-                                        Follow
-                                    </button>
-                                </div>
-                                <!-- Isi Post -->
-                                <p><?php echo $post['content']?></p>
-                                <?php echo $image ?>
-                                <div class="d-flex text-muted post-action m-2">
-                                <?php
-                                //count like
-                                $likeCount = $post['likes'];
-                                if($likeCount == 0) {
-                                    $likeCount = "Be the first to like this post";
+        <?php
+            foreach($postforum as $post) {
+            //get date from created_at with date,month,year
+           $date = date('d-m-Y', strtotime($post['created_at']));
+
+           //Check if image is null
+           if($post['images'] == null) {
+               $image = "";
+           } else {
+               $image = '<img src="'.base_url('uploads/'.$post['images']).'" class="card-img-top" alt="...">';
+           }
+           //if not signed in
+           if(!session()->get('name')) { ?>
+               <!-- Header Post -->
+               <div class="card mb-4">
+                   <div class="card-body">
+                       <div class="d-flex justify-content-between align-items-center mb-3">
+                           <div class="d-flex align-items-center">
+                               <img
+                               src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                               class="rounded-circle me-2"
+                               width="40"
+                               height="40"
+                               />
+                               <div>
+                                   <div class="fw-bold">
+                                       <?php echo $post['titlePost']?>'</br>
+                                       <span class="badge bg-secondary"><?php echo $post['genre']?></span>
+                                   </div>
+                                   <div class="text-muted">
+                                       Posted by <?php echo $post['name']?> • <?php echo $date?>
+                                   </div>
+                               </div>
+                           </div>
+                           <button class="btn btn-outline-secondary btn-follow">
+                               Follow
+                           </button>
+                       </div>
+                       <!-- Isi Post -->
+                       <p><?php echo $post['content']?></p>
+                       <?php echo $image?>
+                       <div class="d-flex text-muted post-actions">
+                            <?php
+                            //count like
+                            $likeCount = $post['likes'];
+                            if($likeCount == 0) {
+                                $likeCount = $post['likes']." like";
+                            } else {
+                                //check if likeCount > 1
+                                if($likeCount > 1) {
+                                    $likeCount = $post['likes']." like";
                                 } else {
-                                    //check if likeCount > 1
-                                    if($likeCount > 1) {
-                                        $likeCount = $post['likes']." people like this post";
-                                    } else {
-                                        $likeCount = $post['likes']." person like this post";
-                                    }
+                                    $likeCount = $post['likes']." like";
                                 }
-                                //check if user already like the post
-                                $session = session();
-                                $userID = $session->get('id');
-                                $likeModel = new \App\Models\LikeModel();
-                                $like = $likeModel->
-                                where('userID', $userID)
-                                ->where('postID', $post['postID'])
-                                ->first();
-                                if($like) {?>
-                                        <div class="me-3">
-                                            <a href="/unlikePost/<?php echo $post['postID']?>" class="text-decoration-none text-dark"><i class="fa fa-thumbs-up me-1"></i><?php echo $likeCount?></a>
-                                        </div>
-                                <?php } else {?>
-                                        <div class="me-3">
-                                            <a href="/likePost/<?php echo $post['postID']?>" class="text-decoration-none text-dark"><i class="fa fa-thumbs-o-up me-1"></i><?php echo $likeCount?></a>
-                                        </div>
-                                <?php }?>
-                                    <div class="me-3">
-                                                <?php
-                                            //comment count
-                                            $commentCount = $post['comments'];
-                                            if($commentCount == 0) {
-                                                $commentCount = "No one commented yet";
-                                                } else {
-                                                    //check if commentCount > 1
-                                                    if($commentCount > 1) {
-                                                        $commentCount = $post['comments']." people commented";
-                                                    } else {
-                                                        $commentCount = $post['comments']." person commented";
-                                                    }
-                                                }
-                                            
-                                        ?>
-                                            <a href="#" onclick="loadComments(<?= $post['postID'] ?>) id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
-                                                <i class="fas fa-comment me-1"></i><?= $commentCount?>
-                                            </a>
-                                        </div>
-                                        <div class="modal fade" id="commentModal<?php echo $post['postID']?>" tabindex="-1" aria-labelledby="commentModalLabel<?php echo $post['postID']?>" aria-hidden="true">
+                            }
+                            ?>
+                           <div class="me-3">
+                               <i class="fas fa-thumbs-up"></i><?= $likeCount?>
+                           </div>
+                           <?php
+                                //comment count
+                                $commentCount = $post['comments'];
+                                if($commentCount == 0) {
+                                    $commentCount = $post['comments']." comment";
+                                    } else {
+                                        //check if commentCount > 1
+                                        if($commentCount > 1) {
+                                            $commentCount = $post['comments']." people commented";
+                                        } else {
+                                            $commentCount = $post['comments']." person commented";
+                                        }
+                                    }
+                                
+                            ?>
+                            
+                            <div class="me-3">
+                                <a href="#" onclick="loadComments(<?= $post['postID'] ?>) id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
+                                    <i class="fas fa-comment me-1"></i><?= $commentCount?>
+                                </a>
+                            </div>
+                            <div class="modal fade" id="commentModal<?php echo $post['postID']?>" tabindex="-1" aria-labelledby="commentModalLabel<?php echo $post['postID']?>" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -535,13 +475,18 @@
                                                     <div class="comment-item">
                                                         <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" alt="User Avatar" class="comment-avatar">
                                                         <div class="comment-content">
-                                                            <div class="comment-author"><?php echo $user['name'] ?></div>
-                                                            <div class="comment-text"><?php echo $comment['content'] ?></div>
-                                                            <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
-                                                        
-                                                            <?php if(session()->get('id') == $comment['userID']) { ?>
-                                                            <a href="/deleteComment/<?php echo $comment['commentID']?>" class="btn btn-danger btn-sm ms-2">Delete</a>
-                                                            <?php } ?>
+                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="comment-indentity">
+                                                                        <div class="comment-author"><?php echo $user['name'] ?></div>
+                                                                        <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
+                                                                    </div>
+                                                                    <div class="comment-text"><?php echo $comment['content'] ?></div>
+                                                                </div>
+                                                                <?php if(session()->get('id') == $comment['userID']) { ?>
+                                                                    <a href="/deleteComment_atHomePage/<?php echo $comment['commentID']?>" class="btn btn-danger btn-sm ms-2"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                                    <?php } ?>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 <?php }
@@ -552,33 +497,161 @@
                                     </div>
                                 </div>
                             </div>
-                                    <div class="me-3">
-                                        <a href="#" class="text-decoration-none text-dark"><i class="fas fa-share me-1"></i></a>
-                                    </div>
-                                    <div class="me-3">
-                                        <a href="/deletePost/<?php echo $post['postID']?>" class="link-danger"><i class="fas fa-trash me-1"></i></a>
+                           <div>
+                               <i class="fas fa-share"></i>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+            <?php } else {?>
+               <!-- Header Post -->
+               <div class="card mb-4">
+                   <div class="card-body">
+                       <div class="d-flex justify-content-between align-items-center mb-3">
+                           <div class="d-flex align-items-center">
+                               <img
+                               src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                               class="rounded-circle me-2"
+                               width="40"
+                               height="40"
+                               />
+                               <div>
+                                   <div class="fw-bold">
+                                   <?php echo $post['titlePost']?></br>
+                                       <span class="badge bg-secondary"><?php echo $post['genre']?></span>
+                                   </div>
+                                   <div class="text-muted">
+                                       Posted by <?php echo $post['name']?> • <?php echo $date?>
+                                   </div>
+                               </div>
+                           </div>
+                           <button class="btn btn-outline-secondary btn-follow">
+                               Follow
+                           </button>
+                       </div>
+                       <!-- Isi Post -->
+                       <p><?php echo $post['content']?></p>
+                       <?php echo $image?>
+                       <div class="d-flex text-muted post-action m-2">
+                                <?php
+                                //count like
+                                $likeCount = $post['likes'];
+                                if($likeCount == 0) {
+                                    $likeCount = "Be the first to like this post";
+                                } else {
+                                    //check if likeCount > 1
+                                    if($likeCount > 1) {
+                                        $likeCount = $post['likes']." people like this post";
+                                    } else {
+                                        $likeCount = $post['likes']." person like this post";
+                                    }
+                                }
+                                //check if user already like the post
+                                $session = session();
+                                $userID = $session->get('id');
+                                $likeModel = new \App\Models\LikeModel();
+                                $like = $likeModel->
+                                where('userID', $userID)
+                                ->where('postID', $post['postID'])
+                                ->first();
+                                if($like) {?>
+                                        <div class="me-3">
+                                            <a href="/unlikePost_atHomePage/<?php echo $post['postID']?>" class="text-decoration-none text-dark"><i class="fa fa-thumbs-up me-1"></i><?php echo $likeCount?></a>
+                                        </div>
+                                        
+                                <?php } else {?>
+                                        <div class="me-3">
+                                            <a href="/likePost_atHomePage/<?php echo $post['postID']?>" class="text-decoration-none text-dark"><i class="fa fa-thumbs-o-up me-1"></i><?php echo $likeCount?></a>
+                                        </div>
+                                <?php }?>
+                           <div class="me-3">
+                            <?php
+                                //comment count
+                                $commentCount = $post['comments'];
+                                if($commentCount == 0) {
+                                    $commentCount = "No one commented yet";
+                                    } else {
+                                        //check if commentCount > 1
+                                        if($commentCount > 1) {
+                                            $commentCount = $post['comments']." people commented";
+                                        } else {
+                                            $commentCount = $post['comments']." person commented";
+                                        }
+                                    }
+                                
+                            ?>
+                                <a href="#" onclick="loadComments(<?= $post['postID'] ?>) id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
+                                    <i class="fas fa-comment me-1"></i><?= $commentCount?>
+                                </a>
+                            </div>
+                            <div class="modal fade" id="commentModal<?php echo $post['postID']?>" tabindex="-1" aria-labelledby="commentModalLabel<?php echo $post['postID']?>" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="commentModalLabel'.$post['postID'].'">Comments from post <?php echo $post['titlePost']?></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <?php
+                                            // check comment count
+                                            $commentModel = new \App\Models\CommentModel();
+                                            $comments = $commentModel->where('postID', $post['postID'])->findAll();
+                                            if(count($comments) == 0) {
+                                                echo '<p class="text-muted">No comments yet.</p>';
+                                            } else {
+                                                echo '<div class="comment-list">';
+                                                foreach($comments as $comment) {
+                                                    //get user data
+                                                    $userModel = new \App\Models\UserModel();
+                                                    $user = $userModel->find($comment['userID']);
+                                                    ?>
+                                                    <div class="comment-item">
+                                                        <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" alt="User Avatar" class="comment-avatar">
+                                                        <div class="comment-content">
+                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="comment-indentity">
+                                                                        <div class="comment-author"><?php echo $user['name'] ?></div>
+                                                                        <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
+                                                                    </div>
+                                                                    <div class="comment-text"><?php echo $comment['content'] ?></div>
+                                                                </div>
+                                                                <?php if(session()->get('id') == $comment['userID']) { ?>
+                                                                    <a href="/deleteComment_atHomePage/<?php echo $comment['commentID']?>" class="btn btn-danger btn-sm ms-2"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                                    <?php } ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php }
+                                                echo '</div>';
+                                            }
+                                            ?>
+                                        </div>
                                     </div>
                                 </div>
-                                        <!-- Comment form -->
-                                <form action="/addComment/<?php echo $post['postID'] ?>" method="post">
-                                        <div class="comment-input-wrapper">
-                                        <input type="text" class="comment-input" name="content" placeholder="Add Comment here...">
-                                        <button class="send-comment-btn">
-                                            <i class="fas fa-paper-plane text-black"></i>
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
-                        </div>
-                    <?php
-                }
-            }
-
+                            <div class="me-3">
+                               <a href="" class="text-decoration-none text-dark"><i class="fas fa-share me-1"></i></a>
+                           </div>
+                       </div>
+                       <!-- Comment form -->
+                        <form action="/addComment_atHomePage/<?php echo $post['postID'] ?>" method="post">
+                                <div class="comment-input-wrapper">
+                                <input type="text" class="comment-input" name="content" placeholder="Add Comment here...">
+                                <button class="send-comment-btn">
+                                    <i class="fas fa-paper-plane text-black"></i>
+                                </button>
+                            </div>
+                        </form>
+                   </div>
+               </div>
+               <?php
+           }
+        }
         ?>
-        </section>
-
+    </section>
       <!-- Sidebar Kanan -->
-      <aside class="col-md-3 mb-4">
+    <aside class="col-md-3 mb-4">
         <!--
         <div class="card mb-4">
           <div class="card-body">
@@ -622,15 +695,10 @@
             </div>
           </div>
         </div>
-      </aside>
+    </aside>
     </div>
   </main>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-  ></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-  ></script>
+
 </body>
 </html>.

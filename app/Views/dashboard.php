@@ -164,12 +164,14 @@
     .send-comment-btn:hover {
       color: #0056b3;
     }
+    .comment-indentity{
+        margin-right: 15px;
+    }
     </style>
 </head>
 <body>
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
-      
       <div class="header-logo">LOGO</div>
 
       <!-- Search Bar -->
@@ -221,8 +223,40 @@
                     <i class="fa fa-sign-in" aria-hidden="true"></i>
                     Sign In</a></li>
                 <?php } ?>
-            
         </ul>
+        <?php
+            if (session()->get('name')) { // Check if user is logged in
+            // Display notification icon only if user is logged in
+        ?>
+        <div class="dropdown ms-3">
+            <?php
+                //count how many notifications from user
+                $notificationModel = new \App\Models\NotificationModel();
+                $notificationcount = $notificationModel->
+                where('userID', session()->get('id'))
+                ->where('isRead', 0)
+                ->countAllResults();
+            ?>
+            <button
+                class="btn btn-outline-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <i class="fas fa-bell"></i>  <?php echo $notificationcount ?>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <?php
+                    if($notificationcount > 0) {
+                        echo '<li><a class="dropdown-item" href="/notifications">Yeay. You have '.$notificationcount.' new notifications</a></li>';
+                    } else {
+                        echo '<li><a class="dropdown-item" href="/notifications">No new notifications. See if you like</a></li>';
+                    }
+                ?>
+            </ul>
+        </div>
+        <?php }?>
         <div class="dropdown ms-3">
           <button
             class="btn btn-outline-secondary dropdown-toggle"
@@ -231,11 +265,15 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            English
+            <img src="https://flagpedia.net/data/flags/w580/us.webp"
+            alt="Language Icon"
+            class="rounded-circle"
+            width="30"
+            height="30"/> EN
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a class="dropdown-item" href="#">English</a></li>
-            <li><a class="dropdown-item" href="#">Other Language</a></li>
+            <li><a class="dropdown-item" href="/#">US English</a></li>
+            <li><a class="dropdown-item" href="/#">Indonesia</a></li>
           </ul>
         </div>
       </div>
@@ -406,7 +444,7 @@
                                Follow
                            </button>
                        </div>
-                       <!-- Isi Post -->
+                        <!-- Isi Post -->
                        <p><?php echo $post['content']?></p>
                        <?php echo $image?>
                        <div class="d-flex text-muted post-actions">
@@ -414,7 +452,7 @@
                             //count like
                             $likeCount = $post['likes'];
                             if($likeCount == 0) {
-                                $likeCount = $post['likes']."like";
+                                $likeCount = $post['likes']." like";
                             } else {
                                 //check if likeCount > 1
                                 if($likeCount > 1) {
@@ -442,9 +480,58 @@
                                     }
                                 
                             ?>
-                           <div class="me-3">
-                               <i class="fas fa-comment"></i><?= $commentCount?>
-                           </div>
+                            
+                            <div class="me-3">
+                                <a href="#" onclick="loadComments(<?= $post['postID'] ?>) id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
+                                    <i class="fas fa-comment me-1"></i><?= $commentCount?>
+                                </a>
+                            </div>
+                            <div class="modal fade" id="commentModal<?php echo $post['postID']?>" tabindex="-1" aria-labelledby="commentModalLabel<?php echo $post['postID']?>" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="commentModalLabel'.$post['postID'].'">Comments from post <?php echo $post['titlePost']?></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <?php
+                                            // check comment count
+                                            $commentModel = new \App\Models\CommentModel();
+                                            $comments = $commentModel->where('postID', $post['postID'])->findAll();
+                                            if(count($comments) == 0) {
+                                                echo '<p class="text-muted">No comments yet.</p>';
+                                            } else {
+                                                echo '<div class="comment-list">';
+                                                foreach($comments as $comment) {
+                                                    //get user data
+                                                    $userModel = new \App\Models\UserModel();
+                                                    $user = $userModel->find($comment['userID']);
+                                                    ?>
+                                                    <div class="comment-item">
+                                                        <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" alt="User Avatar" class="comment-avatar">
+                                                        <div class="comment-content">
+                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="comment-indentity">
+                                                                        <div class="comment-author"><?php echo $user['name'] ?></div>
+                                                                        <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
+                                                                    </div>
+                                                                    <div class="comment-text"><?php echo $comment['content'] ?></div>
+                                                                </div>
+                                                                <?php if(session()->get('id') == $comment['userID']) { ?>
+                                                                    <a href="/deleteComment_atHomePage/<?php echo $comment['commentID']?>" class="btn btn-danger btn-sm ms-2"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                                    <?php } ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php }
+                                                echo '</div>';
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                            <div>
                                <i class="fas fa-share"></i>
                            </div>
@@ -556,13 +643,18 @@
                                                     <div class="comment-item">
                                                         <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" alt="User Avatar" class="comment-avatar">
                                                         <div class="comment-content">
-                                                            <div class="comment-author"><?php echo $user['name'] ?></div>
-                                                            <div class="comment-text"><?php echo $comment['content'] ?></div>
-                                                            <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
-                                                        
-                                                            <?php if(session()->get('id') == $comment['userID']) { ?>
-                                                            <a href="/deleteComment_atHomePage/<?php echo $comment['commentID']?>" class="btn btn-danger btn-sm ms-2">Delete</a>
-                                                            <?php } ?>
+                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="comment-indentity">
+                                                                        <div class="comment-author"><?php echo $user['name'] ?></div>
+                                                                        <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
+                                                                    </div>
+                                                                    <div class="comment-text"><?php echo $comment['content'] ?></div>
+                                                                </div>
+                                                                <?php if(session()->get('id') == $comment['userID']) { ?>
+                                                                    <a href="/deleteComment_atHomePage/<?php echo $comment['commentID']?>" class="btn btn-danger btn-sm ms-2"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                                    <?php } ?>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 <?php }

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\PostModel;
 use App\Models\UserModel;
+use App\Models\NotificationModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Post extends BaseController
@@ -51,6 +52,23 @@ class Post extends BaseController
         
         //Insert data to postforum
         $model->insert($data);
+
+        //create message from notifications table
+        $session = session();
+        $userID = $session->get('id');
+        $userModel = new UserModel();
+        $data['userID'] = $userModel->where('id', $userID)->first();
+        $name = $data['userID']['name'];
+        $notificationModel = new NotificationModel();
+        $dataNotification = [
+            'userID' => $userID,
+            'type' => 'post',
+            'message' => 'created a new post'.' with title: '.$this->request->getVar('titlePost'),
+            'isRead' => 0,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $notificationModel->insert($dataNotification);
+
         return redirect()->to('/')->with('success', 'Post Created Successfully');
         
     }
@@ -93,6 +111,23 @@ class Post extends BaseController
 
         //Insert data to postforum
         $model->insert($data);
+        
+        //create message from notifications table
+        $session = session();
+        $userID = $session->get('id');
+        $userModel = new UserModel();
+        $data['userID'] = $userModel->where('id', $userID)->first();
+        $name = $data['userID']['name'];
+        $notificationModel = new NotificationModel();
+        $dataNotification = [
+            'userID' => $userID,
+            'type' => 'post',
+            'message' => 'created a new post'.' with title: '.$this->request->getVar('titlePost'),
+            'isRead' => 0,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $notificationModel->insert($dataNotification);
+
         //return to the profile page with $name
         $session = session();
         $userID = $session->get('id');

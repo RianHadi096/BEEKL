@@ -32,6 +32,12 @@ $session = session();
     $routes->get('/genre/(:segment)', 'Sort::sortByGenre_atHomePage/$1');
 // Sort by genre at profile page
     $routes->get('/profile/genre/(:segment)', 'Sort::sortByGenre/$1');
+//Notifications
+    $routes->get('/notifications', 'Notifications::index');
+    //$routes->get('/notifications/markAsRead/(:num)', 'Notifications::markAsRead/$1');
+    //$routes->get('/notifications/delete/(:num)', 'Notifications::delete/$1');
+
+
 
 //POST DATA IN ROUTES FROM VIEWS AND THEN DIRECTLY TO THEIR CONTROLLERS
     $routes->post('/postfromhomepage', 'Post::createPostfromHomePage');
