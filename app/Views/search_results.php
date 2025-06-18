@@ -408,14 +408,16 @@
 
     <!-- Bagian Konten Tengah -->
     <section class="col-md-7 mb-4">
-        <?php if (isset($postforum) && !empty($postforum)){ ?>
-            <h4>Search Results for "<?= esc($searchTerm) ?>"</h4>
-            <?php foreach ($postforum as $post){ ?>
+        <?php
+            $name = session()->get('name');
+            if (isset($postforum) && !empty($postforum)){ ?>
+                <h4>Search Results for "<?= esc($searchTerm) ?>"</h4>
+                <?php foreach ($postforum as $post){ ?>
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title"><?= esc($post['titlePost']) ?></h5>
                         <p class="card-text"><?= esc($post['content']) ?></p>
-                        <p class="card-text"><small class="text-muted">Genre: <?= esc($post['genre']) ?> | Posted on: <?= esc($post['created_at']) ?></small></p>
+                        <p class="card-text"><small class="text-muted">Genre: <?= esc($post['genre']) ?> | Posted by <?= esc($post['name']) ?> | Posted on: <?= esc($post['created_at']) ?></small></p>
                     </div>
                 </div>
             <?php } ?>
@@ -438,9 +440,11 @@
                                    </div>
                                </div>
                            </div>
-                           <button class="btn btn-outline-secondary btn-follow">
-                               Follow
-                           </button>
+                           <?php if($user['name'] != $name) {?>
+                                <button class="btn btn-outline-secondary btn-follow">
+                                Follow
+                                </button>
+                            <?php }?>
                         </div>
                     </div>
                 </div>
