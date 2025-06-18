@@ -59,4 +59,4 @@ $session = session();
     //ByWords
     $routes->post('/search', 'Search::searchAll_ByWords');
     //ByTrendings
-    $routes->post('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings');
+    $routes->get('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings');
