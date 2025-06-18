@@ -177,8 +177,13 @@
       <!-- Search Bar -->
       <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <form action="" method="post">
-            
+        <form action="search" method="post">
+            <input
+            type="text"
+            class="form-control"
+            name="search"
+            placeholder="Search your thoughts"
+            />
         </form>
       </div>
 
@@ -417,10 +422,10 @@
            }
            //if not signed in
            if(!session()->get('name')) { ?>
-               <!-- Header Post -->
-               <div class="card mb-4">
-                   <div class="card-body">
-                       <div class="d-flex justify-content-between align-items-center mb-3">
+                <!-- Header Post -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
                            <div class="d-flex align-items-center">
                                <img
                                src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
@@ -441,11 +446,11 @@
                            <button class="btn btn-outline-secondary btn-follow">
                                Follow
                            </button>
-                       </div>
+                        </div>
                         <!-- Isi Post -->
-                       <p><?php echo $post['content']?></p>
-                       <?php echo $image?>
-                       <div class="d-flex text-muted post-actions">
+                        <p><?php echo $post['content']?></p>
+                        <?php echo $image?>
+                        <div class="d-flex text-muted post-actions">
                             <?php
                             //count like
                             $likeCount = $post['likes'];

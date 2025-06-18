@@ -97,10 +97,7 @@ class Home extends BaseController
         //return to dashboard page
         return view('dashboard',$data);
     }
-    public function post(): string
-    {
-        return view('post');
-    }
+
     public function profile(): string
     {
         //Get Model
@@ -145,11 +142,15 @@ class Home extends BaseController
             }
             return $post;
         }, $data['postforum']);
+
         //get all data from postforum with comments
         $data['comments'] = $model->select('postforum.*, COUNT(comments.commentID) as commentCount')
             ->join('comments', 'comments.postID = postforum.postID', 'left')
             ->groupBy('postforum.postID')
             ->findAll();
         return view('dashboard_profile',$data);
+    }
+    public function viewPost($id = null){
+        
     }
 }
