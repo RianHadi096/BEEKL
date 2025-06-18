@@ -445,7 +445,7 @@
                                         />
                                         <div>
                                             <div class="fw-bold">
-                                                <?= $post['titlePost']?></br>
+                                                <a class="text-decoration-none text-dark" href="/post/<?= $post['titlePost']?>"> <?= $post['titlePost']?> </a></br>
                                                 <span class="badge bg-secondary"><?php echo $post['genre']?></span>
                                             </div>
                                             <div class="text-muted">
@@ -552,14 +552,16 @@
                                     </div>
                                 </div>
                             </div>
-                                    <div class="me-3">
-                                        <a href="#" class="text-decoration-none text-dark"><i class="fas fa-share me-1"></i></a>
-                                    </div>
-                                    <div class="me-3">
-                                        <a href="/deletePost/<?php echo $post['postID']?>" class="link-danger"><i class="fas fa-trash me-1"></i></a>
-                                    </div>
-                                </div>
-                                        <!-- Comment form -->
+                            <div class="me-3">
+                                <a href="#" class="text-decoration-none text-dark share-btn" data-post-url="<?= base_url('/post/' . urlencode($post['titlePost'])) ?>">
+                                    <i class="fas fa-share me-1"></i>
+                                </a>
+                            </div>
+                            <div class="me-3">
+                                <a href="/deletePost/<?php echo $post['postID']?>" class="link-danger"><i class="fas fa-trash me-1"></i></a>
+                            </div>
+                            </div>
+                             <!-- Comment form -->
                                 <form action="/addComment/<?php echo $post['postID'] ?>" method="post">
                                         <div class="comment-input-wrapper">
                                         <input type="text" class="comment-input" name="content" placeholder="Add Comment here...">
@@ -632,5 +634,48 @@
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
   ></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const shareButtons = document.querySelectorAll('.share-btn');
+      const snackbar = document.getElementById('snackbar');
+
+      function showSnackbar() {
+        snackbar.style.visibility = 'visible';
+        snackbar.style.opacity = '1';
+        setTimeout(() => {
+          snackbar.style.visibility = 'hidden';
+          snackbar.style.opacity = '0';
+        }, 3000);
+      }
+
+      shareButtons.forEach(button => {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+          const postUrl = this.getAttribute('data-post-url');
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(postUrl).then(() => {
+              showSnackbar();
+            }).catch(() => {
+              alert('Failed to copy the link.');
+            });
+          } else {
+            // fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = postUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+              document.execCommand('copy');
+              showSnackbar();
+            } catch (err) {
+              alert('Failed to copy the link.');
+            }
+            document.body.removeChild(textArea);
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>.

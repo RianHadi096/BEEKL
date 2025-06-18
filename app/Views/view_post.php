@@ -167,6 +167,7 @@
     .comment-indentity{
         margin-right: 15px;
     }
+
     </style>
 </head>
 <body>
@@ -536,7 +537,7 @@
                                 </div>
                             </div>
                            <div class="me-3">
-                               <a href="#share" class="text-decoration-none text-dark share-btn" data-post-url="<?= base_url('/post/' . $post['titlePost']) ?>">
+                               <a href="#share" class="text-decoration-none text-dark share-btn" data-post-url="<?= base_url('/post/' . urlencode($post['titlePost'])) ?>">
                                    <i class="fas fa-share me-1"></i>
                                </a>
                            </div>
@@ -671,7 +672,7 @@
                                 </div>
                             </div>
                             <div class="me-3">
-                               <a href="#share" class="text-decoration-none text-dark share-btn"">
+                               <a href="#share" class="text-decoration-none text-dark share-btn" data-post-url="<?= base_url('/post/' . urlencode($post['titlePost'])) ?>">
                                    <i class="fas fa-share me-1"></i>
                                </a>
                            </div>
@@ -746,7 +747,7 @@
                     <?php if (!empty($trendingWords)): ?>
                         <?php foreach ($trendingWords as $word => $count): ?>
                             <li class="list-group-item d-flex justify-content-between align-items-center text-md-center">
-                                <a class="text-decoration-none text-dark" href="search/trendings/<?= esc($word)?>"><?= esc($word) ?></a>
+                                <a href="search/trendings/<?= esc($word)?>"><?= esc($word) ?></a>
                             </li>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -763,7 +764,7 @@
   <div id="snackbar" style="visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 2px; padding: 16px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-size: 17px;">
     Link has copied.
   </div>
-  
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const shareButtons = document.querySelectorAll('.share-btn');

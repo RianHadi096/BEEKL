@@ -19,7 +19,7 @@ class Post extends BaseController
     public function createPostfromHomePage(){
         //Get Model
         $model = new PostModel();
-        
+
         //upload image
         $image = $this->request->getFile('images');
         if($image->isValid()) {
