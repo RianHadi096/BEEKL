@@ -287,7 +287,7 @@
       <aside class="col-md-2 mb-4">
       <div class="card-left">
             <div class="card-body">
-            <p class="fw-bold ">What do you want today?</p>
+            <p class="fw-bold text-md-center">What do you want today?</p>
                 <nav class="nav flex-column">
                     <a href="/" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Home</a>
                     <a href="#" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Community</a>
