@@ -32,14 +32,18 @@ $session = session();
     $routes->get('/genre/(:segment)', 'Sort::sortByGenre_atHomePage/$1');
 // Sort by genre at profile page
     $routes->get('/profile/genre/(:segment)', 'Sort::sortByGenre/$1');
+
+//Sort by genre
+    $routes->get('/post/genre/(:segment)', 'Sort::sortByGenre/$1');
+
+
 //Notifications
     $routes->get('/notifications', 'Notifications::index');
     //$routes->get('/notifications/markAsRead/(:num)', 'Notifications::markAsRead/$1');
     //$routes->get('/notifications/delete/(:num)', 'Notifications::delete/$1');
 
-//Search
-    //ByTrendings
-    $routes->get('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings/$1');
+//View the post
+    $routes->get('/post/(:segment)', 'Home::viewPost/$1');
 
 //POST DATA IN ROUTES FROM VIEWS AND THEN DIRECTLY TO THEIR CONTROLLERS
     $routes->post('/postfromhomepage', 'Post::createPostfromHomePage');
@@ -54,3 +58,5 @@ $session = session();
 //Search
     //ByWords
     $routes->post('/search', 'Search::searchAll_ByWords');
+    //ByTrendings
+    $routes->post('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings');
