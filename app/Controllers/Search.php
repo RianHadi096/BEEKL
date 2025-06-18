@@ -20,10 +20,17 @@ class Search extends BaseController
 
         $postModel = new PostModel();
         $userModel = new UserModel();
+        //Get Session ID
+        $session = session();
+        $userID = $session->get('id');
+
         //search Post
-        $data['postforum'] = $postModel->like('titlePost', $searchTerm)
-                    ->orLike('content', $searchTerm)
-                    ->findAll();
+        $data['postforum'] = $postModel
+            ->like('titlePost', $searchTerm)
+            ->orLike('content', $searchTerm)
+            ->join('users', 'users.id = postforum.userID')
+            ->where('userID', $userID)
+            ->findAll();
 
         $data['users'] = $userModel->like('name', $searchTerm)
                     ->orLike('email', $searchTerm)
