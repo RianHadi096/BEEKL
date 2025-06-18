@@ -74,7 +74,58 @@ class Search extends BaseController
         // Pass results and search term to the view
         return view('search_results',$data);
     }
-    public function searchBy_Trendings($search = null){
-        
+    public function searchAll_ByTrendings($searchTerm = null){
+
+        $postModel = new PostModel();
+        //Get Session ID
+        $session = session();
+        $userID = $session->get('id');
+
+        //search Post
+        $data['postforum'] = $postModel
+            ->like('titlePost', $searchTerm)
+            ->orLike('content', $searchTerm)
+            ->join('users', 'users.id = postforum.userID')
+            ->where('userID', $userID)
+            ->findAll();
+
+        //translating genre to english
+        $data['postforum'] = array_map(function($post) {
+            switch ($post['genre']) {
+                case 'Olahraga':
+                    $post['genre'] = 'Sports';
+                    break;
+                case 'Anime':
+                    $post['genre'] = 'Anime';
+                    break;
+                case 'Politik':
+                    $post['genre'] = 'Politics';
+                    break;
+                case 'Film':
+                    $post['genre'] = 'Movies';
+                    break;
+                case 'Berita':
+                    $post['genre'] = 'News';
+                    break;
+                case 'Komedi':
+                    $post['genre'] = 'Comedy/Humors';
+                    break;
+                case 'Buku':
+                    $post['genre'] = 'Book';
+                    break;
+                case 'Teknologi':
+                    $post['genre'] = 'Technology';
+                    break;
+                default:
+                    $post['genre'] = 'Others';
+            }
+            return $post;
+        }, $data['postforum']);
+
+        //save searchterm variable
+        $data['searchTerm'] = $searchTerm;
+
+        // Pass results and search term to the view
+        return view('search_results',$data);
     }
 }
