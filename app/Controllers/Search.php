@@ -11,7 +11,7 @@ class Search extends BaseController
     {
         //
     }
-    public function search()
+    public function searchAllByWords()
     {
         $searchTerm = $this->request->getGet('q');
         if (!$searchTerm) {
@@ -36,5 +36,8 @@ class Search extends BaseController
         ];
 
         return view('search_results', $data);
+    }
+    public function searchByTrendings(){
+        
     }
 }

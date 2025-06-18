@@ -37,7 +37,11 @@ $session = session();
     //$routes->get('/notifications/markAsRead/(:num)', 'Notifications::markAsRead/$1');
     //$routes->get('/notifications/delete/(:num)', 'Notifications::delete/$1');
 
-
+//Search
+    //ByWords
+    $routes->get('/search/(:segment)', 'Search::searchAll_ByWords');
+    //ByTrendings
+    $routes->get('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings');
 
 //POST DATA IN ROUTES FROM VIEWS AND THEN DIRECTLY TO THEIR CONTROLLERS
     $routes->post('/postfromhomepage', 'Post::createPostfromHomePage');

@@ -11,6 +11,40 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Home extends BaseController
 {
+
+    private function getTrendingWords(int $limit = 10): array
+    {
+        $model = new PostModel();
+        // Fetch recent posts (e.g., last 30 days)
+        $thirtyDaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
+        $posts = $model->where('created_at >=', $thirtyDaysAgo)->findAll();
+
+        $wordCounts = [];
+        $stopWords = ['the', 'and', 'a', 'to', 'of', 'in', 'is', 'it', 'you', 'that', 'on', 'for', 'with', 'as', 'this', 'are', 'was', 'but', 'be', 'at', 'by', 'an'];
+
+        foreach ($posts as $post) {
+            // Extract words from title and content
+            $text = strtolower($post['titlePost'] . ' ' . $post['content']);
+            // Remove non-alphanumeric characters
+            $text = preg_replace('/[^a-z0-9\s]/', '', $text);
+            $words = explode(' ', $text);
+            foreach ($words as $word) {
+                $word = trim($word);
+                if ($word === '' || in_array($word, $stopWords)) {
+                    continue;
+                }
+                if (!isset($wordCounts[$word])) {
+                    $wordCounts[$word] = 0;
+                }
+                $wordCounts[$word]++;
+            }
+        }
+        // Sort words by frequency descending
+        arsort($wordCounts);
+        // Return top $limit words with counts
+        return array_slice($wordCounts, 0, $limit, true);
+    }
+
     public function index(): string
     {
         //Get Model
@@ -57,6 +91,10 @@ class Home extends BaseController
             ->join('comments', 'comments.postID = postforum.postID', 'left')
             ->groupBy('postforum.postID')
             ->findAll();
+
+        $data['trendingWords'] = $this->getTrendingWords();
+
+        //return to dashboard page
         return view('dashboard',$data);
     }
     public function post(): string

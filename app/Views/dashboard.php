@@ -177,11 +177,9 @@
       <!-- Search Bar -->
       <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search your thoughts"
-        />
+        <form action="" method="post">
+            
+        </form>
       </div>
 
       <!-- Bagian Kanan Header -->
@@ -286,7 +284,7 @@
       <aside class="col-md-2 mb-4">
         <div class="card-left">
             <div class="card-body">
-            <p class="fw-bold ">What do you want today?</p>
+            <p class="fw-bold text-md-center">What do you want today?</p>
                 <nav class="nav flex-column">
                     <a href="/" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Home</a>
                     <a href="#" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Community</a>
@@ -701,9 +699,9 @@
         -->
 
         <!-- Card: Link-Link Tambahan -->
-        <div class="card">
+        <div class="card mb-4">
           <div class="card-body">
-            <p class="fw-bold">What kind of genres you might like?</p>
+            <p class="fw-bold text-md-center">What kind of genres you might like?</p>
             <div class="d-grid gap-2">
                 <!-- Baris 1 -->
                 <div class="d-flex justify-content-between align-items-center">
@@ -729,6 +727,24 @@
                 </div>
             </div>
           </div>
+        </div>
+
+        <!-- Trending berdasarkan per kata -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="fw-bold text-md-center">Trending Today</p>
+                <ul class="list-group list-group-flush">
+                    <?php if (!empty($trendingWords)): ?>
+                        <?php foreach ($trendingWords as $word => $count): ?>
+                            <li class="list-group-item d-flex justify-content-between align-items-center text-md-center">
+                                <a href="search/trendings/<?= esc($word)?>"><?= esc($word) ?></a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li class="list-group-item">No trending available.</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
         </div>
     </aside>
     </div>
