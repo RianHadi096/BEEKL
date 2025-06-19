@@ -7,6 +7,11 @@ use CodeIgniter\Router\RouteCollection;
  */
 $session = session();
 
+$routes->get('/', 'Home::index');
+
+$routes->get('check-migration', 'CheckMigration::index');
+
+
 //GET DATA IN ROUTES FROM THEIR CONTROLLERS
     $routes->get('/home', 'Home::index');
     //$routes->get('/dashboard', 'Dashboard::index',['filter' => 'auth']);
@@ -67,3 +72,12 @@ $session = session();
     $routes->post('/search', 'Search::searchAll_ByWords');
     //ByTrendings
     $routes->get('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings/$1');
+
+// BEEKL+ premium features routes
+$routes->group('beeklplus', function($routes) {
+    $routes->post('toggle-dark-mode', 'BeeklPlus::toggleDarkMode');
+    $routes->post('set-avatar-frame/(:segment)', 'BeeklPlus::setAvatarFrame/$1');
+    $routes->post('upgrade', 'BeeklPlus::upgradeToPremium');
+    $routes->get('upgrade', 'BeeklPlus::upgradeToPremium');
+    $routes->get('pricing', 'BeeklPlus::pricing');
+});

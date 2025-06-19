@@ -10,6 +10,14 @@ class Dashboard extends BaseController
     public function index()
     {
         $session = session();
-        echo "Welcome back, ".$session->get('name');
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find($session->get('id'));
+
+        $data = [
+            'user' => $user,
+            // You can add other data needed by the view here
+        ];
+
+        return view('dashboard_profile', $data);
     }
 }
