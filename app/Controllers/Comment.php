@@ -49,7 +49,7 @@ class Comment extends BaseController
         $notificationModel->insert($data);
 
         //return to the home page
-        return redirect()->to('/')->with('success', 'Comment Added Successfully');
+        return redirect()->to('/home')->with('success', 'Comment Added Successfully');
 
         
     }

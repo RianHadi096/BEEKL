@@ -11,6 +11,6 @@ class Logout extends BaseController
     {
         //Destroy the session
         session()->destroy();
-        return redirect()->to('/'); 
+        return redirect()->to('/home'); 
     }
 }

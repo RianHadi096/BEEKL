@@ -69,7 +69,7 @@ class Post extends BaseController
         ];
         $notificationModel->insert($dataNotification);
 
-        return redirect()->to('/')->with('success', 'Post Created Successfully');
+        return redirect()->to('/home')->with('success', 'Post Created Successfully');
         
     }
     public function createPostfromProfilePage(){
