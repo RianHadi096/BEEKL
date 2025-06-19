@@ -8,6 +8,9 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Register extends BaseController
 {
+    // Define your encryption key here
+    protected $encryptionKey = 'your-secret-key';
+
     public function index()
     {
         //include helper form
@@ -18,29 +21,32 @@ class Register extends BaseController
  
     public function save()
     {
-        //include helper form
         helper(['form']);
-        //set rules validation form
         $rules = [
-            'regist_name'          => 'required|min_length[3]|max_length[20]',
-            'regist_email'         => 'required|min_length[6]|max_length[50]|valid_email|is_unique[users.email]',
-            'regist_password'      => 'required|min_length[6]|max_length[200]',
-            'confpassword'         => 'matches[regist_password]'
+            'regist_name'     => 'required|min_length[3]|max_length[20]',
+            'regist_email'    => 'required|valid_email',
+            'regist_password' => 'required|min_length[6]',
+            'confpassword'    => 'matches[regist_password]'
         ];
-         
-        if($this->validate($rules)){
-            $model = new UserModel();
-            $data = [
-                'name'     => $this->request->getVar('regist_name'),
-                'email'    => $this->request->getVar('regist_email'),
-                'password' => password_hash($this->request->getVar('regist_password'), PASSWORD_DEFAULT)
-            ];
-            $model->save($data);
-            return redirect()->to('/login');
-        }else{
-            $data['validation'] = $this->validator;
-            echo view('register', $data);
+
+        if (!$this->validate($rules)) {
+            return view('register', [
+                'validation' => $this->validator
+            ]);
         }
-         
+
+        $model = new UserModel();
+        $email = $this->request->getVar('regist_email');
+        $encryptedEmail = openssl_encrypt($email, 'AES-128-ECB', $this->encryptionKey);
+        $password = $this->request->getVar('regist_password');
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $model->save([
+            'name'     => $this->request->getVar('regist_name'),
+            'email'    => $encryptedEmail,
+            'password' => $hashedPassword
+        ]);
+
+        return redirect()->to('/login')->with('msg', 'Registration successful! Please login.');
     }
 }

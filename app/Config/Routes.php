@@ -8,7 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $session = session();
 
 //GET DATA IN ROUTES FROM THEIR CONTROLLERS
-    $routes->get('/', 'Home::index');
+    $routes->get('/home', 'Home::index');
     //$routes->get('/dashboard', 'Dashboard::index',['filter' => 'auth']);
     $routes->get('/login', 'Login::index');
     $routes->get('/logout', 'Logout::index');

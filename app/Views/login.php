@@ -19,29 +19,31 @@
     <div class="container header-container d-flex justify-content-between align-items-center">
         
         <div class="header-logo">LOGO</div>
-        <!-- Bagian Kanan Header -->
-        <div class="d-flex align-items-center">
-            <button class="btn btn-outline-secondary rounded-pill me-3">
-            Try BEEKL+
-            </button>
-            
-            
-            <div class="dropdown ms-3">
-            <button
-                class="btn btn-outline-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-            >
-                English
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="#">English</a></li>
-                <li><a class="dropdown-item" href="#">Other Language</a></li>
-            </ul>
+            <!-- Bagian Kanan Header -->
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary rounded-pill me-3">
+                Try BEEKL+
+                </button>
+                <div class="dropdown ms-3">
+                    <button
+                        class="btn btn-outline-secondary dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <img src="https://flagpedia.net/data/flags/w580/us.webp"
+                        alt="Language Icon"
+                        class="rounded-circle"
+                        width="30"
+                        height="30"/> EN
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="/#">US English</a></li>
+                        <li><a class="dropdown-item" href="/#">Indonesia</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
         </div>
     </header>
     <main>
@@ -50,7 +52,7 @@
             <div class="col" style="background: radial-gradient(50% 123.47% at 50% 50%, #ffc700 0%, #720059 100%), linear-gradient(121.28deg, #669600 0%, #ff4d00 100%), linear-gradient(360deg, #ff6b00 0%, #8fff00 100%), radial-gradient(100% 164.72% at 100% 100%, #6100ff 0%, #00ff57 100%), radial-gradient(100% 148.07% at 0% 0%, #fff500 0%, #6a845a 100%);background-blend-mode: screen, color-dodge, overlay, difference, normal;padding: 50px;margin-bottom: 2px;padding-bottom: 160px;">
                 <div class="login-card"><img class="profile-img-card" src="<?= base_url('img/avatar_2x.png');?>">
                     <p class="profile-name-card"> </p>
-                    <p style="text-align: center;">Login untuk akses Beekl</p>
+                    <p style="text-align: center;">Do you have a BEEKL? Go sign in.</p>
                     <form class="form-signin" style="padding-bottom: 52px;margin-bottom: -34px;" action="/login/auth" method="post">
                         <?php if(session()->getFlashdata('msg')){
                             echo '<div class="alert alert-danger" role="alert" style="margin-bottom: 5px;">'.session()->getFlashdata('msg').'</div>';
@@ -59,19 +61,19 @@
                         <input class="form-control" type="password" name="login_password" id="InputForPassword" required="" placeholder="Password">
                         <div class="checkbox" style="margin-bottom: 10px;">
                             <label>
-                                <input type="checkbox" value="remember-me">Ingat saya
+                                <input type="checkbox" value="remember-me"> Remember me
                             </label>
                         </div>
                         <button class="btn btn-primary btn-lg d-block btn-signin w-100" type="submit" 
                             style="
                             margin-bottom: 10px;
                             background-color: #ff4d00;">
-                            Masuk</button>
+                            Log In</button>
                         <div style="margin-bottom: 30px;">
-                            <a class="forgot-password" href="#">Lupa Password.</a>
+                            <a class="forgot-password text-decoration-none text-secondary-emphasis" href="#"># I forgot my Password. Click Me.</a>
                         </div>
                         <div style="margin-bottom: 0px;">
-                            <a class="forgot-password" href="/register">Belum punya akun BEEKL? Daftar Disini.</a>
+                            <a class="register text-decoration-none text-secondary-emphasis" href="/register"><center>Register here if you don't have a BEEKL account.</center></a>
                         </div>
                     </form>
                 </div>

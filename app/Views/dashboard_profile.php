@@ -209,7 +209,7 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
             <?php
                 if(session()->get('name')) {
-                    echo '<li><a class="dropdown-item" href="/">
+                    echo '<li><a class="dropdown-item" href="/home">
                     <i class="fa fa-home" aria-hidden="true"></i>
                     Back to Home
                     </a></li>';
@@ -289,7 +289,7 @@
             <div class="card-body">
             <p class="fw-bold text-md-center">What do you want today?</p>
                 <nav class="nav flex-column">
-                    <a href="/" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Home</a>
+                    <a href="/home" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Home</a>
                     <a href="#" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Community</a>
                     <?php if(session()->get('name')){?>
                         <a href="compose" class="btn btn-outline-black me-2 m-1" role="button" data-bs-toggle="modal"

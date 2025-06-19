@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class NotificationModel extends Model
 {
     protected $table            = 'notifications';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'notificationID';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
