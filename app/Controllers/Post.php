@@ -53,21 +53,16 @@ class Post extends BaseController
         //Insert data to postforum
         $model->insert($data);
 
-        //create message from notifications table
-        $session = session();
-        $userID = $session->get('id');
-        $userModel = new UserModel();
-        $data['userID'] = $userModel->where('id', $userID)->first();
-        $name = $data['userID']['name'];
+        // Create notification for successful post creation
         $notificationModel = new NotificationModel();
-        $dataNotification = [
-            'userID' => $userID,
+        $notificationData = [
+            'userID' => session()->get('id'),
             'type' => 'post',
-            'message' => 'created a new post'.' with title: '.$this->request->getVar('titlePost'),
+            'message' => 'Your post titled "' . $data['titlePost'] . '" has been successfully added.',
             'isRead' => 0,
             'created_at' => date('Y-m-d H:i:s')
         ];
-        $notificationModel->insert($dataNotification);
+        $notificationModel->insert($notificationData);
 
         return redirect()->to('/home')->with('success', 'Post Created Successfully');
         
@@ -111,22 +106,17 @@ class Post extends BaseController
 
         //Insert data to postforum
         $model->insert($data);
-        
-        //create message from notifications table
-        $session = session();
-        $userID = $session->get('id');
-        $userModel = new UserModel();
-        $data['userID'] = $userModel->where('id', $userID)->first();
-        $name = $data['userID']['name'];
+
+        // Create notification for successful post creation
         $notificationModel = new NotificationModel();
-        $dataNotification = [
-            'userID' => $userID,
+        $notificationData = [
+            'userID' => session()->get('id'),
             'type' => 'post',
-            'message' => 'created a new post'.' with title: '.$this->request->getVar('titlePost'),
+            'message' => 'Your post titled "' . $data['titlePost'] . '" has been successfully added.',
             'isRead' => 0,
             'created_at' => date('Y-m-d H:i:s')
         ];
-        $notificationModel->insert($dataNotification);
+        $notificationModel->insert($notificationData);
 
         //return to the profile page with $name
         $session = session();
@@ -136,5 +126,24 @@ class Post extends BaseController
         $name = $data['userID']['name'];
         return redirect()->to('profile/'.$name)->with('success', 'Post Created Successfully');
         
+    }
+
+    public function getPostsLikedByOthers()
+    {
+        $currentUserID = session()->get('id');
+
+        $likeModel = new \App\Models\LikeModel();
+
+        $builder = $likeModel->builder();
+        $builder->select('postforum.*');
+        $builder->join('postforum', 'postforum.postID = likes.postID');
+        $builder->where('likes.userID !=', $currentUserID);
+        $builder->where('postforum.userID !=', $currentUserID);
+        $builder->groupBy('postforum.postID');
+
+        $posts = $builder->get()->getResultArray();
+
+        // Return posts as JSON or pass to a view as needed
+        return $this->response->setJSON($posts);
     }
 }
