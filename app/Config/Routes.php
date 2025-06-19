@@ -10,10 +10,17 @@ $session = session();
 //GET DATA IN ROUTES FROM THEIR CONTROLLERS
     $routes->get('/home', 'Home::index');
     //$routes->get('/dashboard', 'Dashboard::index',['filter' => 'auth']);
+//Login
     $routes->get('/login', 'Login::index');
+//Logout
     $routes->get('/logout', 'Logout::index');
     $routes->get('/profile/logout', 'Logout::index');
+    $routes->get('/profile/genre/logout', 'Logout::index');
+    $routes->get('/genre/logout', 'Logout::index');
+
+//Register Page
     $routes->get('/register', 'Register::index');
+//Profile Page
     $routes->get('/profile/(:segment)', 'Home::profile');
 
 //Sidemenu
@@ -59,4 +66,4 @@ $session = session();
     //ByWords
     $routes->post('/search', 'Search::searchAll_ByWords');
     //ByTrendings
-    $routes->get('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings');
+    $routes->get('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings/$1');

@@ -22,6 +22,39 @@ class Sort extends BaseController
         $data['postforum'] = $postModel ->join('users', 'users.id = postforum.userID')
                                         ->where('genre', $genre)
                                         ->findAll();
+
+        //translating genre to english
+        $data['postforum'] = array_map(function($post) {
+            switch ($post['genre']) {
+                case 'Olahraga':
+                    $post['genre'] = 'Sports';
+                    break;
+                case 'Anime':
+                    $post['genre'] = 'Anime';
+                    break;
+                case 'Politik':
+                    $post['genre'] = 'Politics';
+                    break;
+                case 'Film':
+                    $post['genre'] = 'Movies';
+                    break;
+                case 'Berita':
+                    $post['genre'] = 'News';
+                    break;
+                case 'Komedi':
+                    $post['genre'] = 'Comedy/Humors';
+                    break;
+                case 'Buku':
+                    $post['genre'] = 'Book';
+                    break;
+                case 'Teknologi':
+                    $post['genre'] = 'Technology';
+                    break;
+                default:
+                    $post['genre'] = 'Others';
+            }
+            return $post;
+        }, $data['postforum']);
         //check if there are posts with the specified genre
         //if (empty($data['postforum'])) {
         //    return redirect()->to('/')->with('error', 'No posts found for this genre.');
@@ -51,6 +84,39 @@ class Sort extends BaseController
                                         ->where('genre', $genre)
                                         ->where('userID', $userID)
                                         ->findAll();
+        
+        //translating genre to english
+        $data['postforum'] = array_map(function($post) {
+            switch ($post['genre']) {
+                case 'Olahraga':
+                    $post['genre'] = 'Sports';
+                    break;
+                case 'Anime':
+                    $post['genre'] = 'Anime';
+                    break;
+                case 'Politik':
+                    $post['genre'] = 'Politics';
+                    break;
+                case 'Film':
+                    $post['genre'] = 'Movies';
+                    break;
+                case 'Berita':
+                    $post['genre'] = 'News';
+                    break;
+                case 'Komedi':
+                    $post['genre'] = 'Comedy/Humors';
+                    break;
+                case 'Buku':
+                    $post['genre'] = 'Book';
+                    break;
+                case 'Teknologi':
+                    $post['genre'] = 'Technology';
+                    break;
+                default:
+                    $post['genre'] = 'Others';
+            }
+            return $post;
+        }, $data['postforum']);
         //check if there are posts with the specified genre
         //if (empty($data['postforum'])) {
         //    return redirect()->to('/profile')->with('error', 'No posts found for this genre.');

@@ -143,6 +143,8 @@ class Home extends BaseController
             return $post;
         }, $data['postforum']);
 
+        $data['trendingWords'] = $this->getTrendingWords();
+
         //get all data from postforum with comments
         $data['comments'] = $model->select('postforum.*, COUNT(comments.commentID) as commentCount')
             ->join('comments', 'comments.postID = postforum.postID', 'left')
@@ -194,6 +196,8 @@ class Home extends BaseController
             }
             return $post;
         }, $data['postforum']);
+
+        $data['trendingWords'] = $this->getTrendingWords();
 
         //get all data from postforum with comments
         $data['comments'] = $model->select('postforum.*, COUNT(comments.commentID) as commentCount')
