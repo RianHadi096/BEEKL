@@ -550,7 +550,10 @@
                                 </div>
                             </div>
                             <div class="me-3">
-                                <a href="#" class="text-decoration-none text-dark share-btn" data-post-url="<?= base_url('/post/' . urlencode($post['titlePost'])) ?>">
+                                <a href="#share" 
+                                class="share-btn text-decoration-none text-dark" 
+                                data-post-url="<?= base_url('post/' . urlencode($post['titlePost'])) ?>"
+                                title="Share this post">
                                     <i class="fas fa-share me-1"></i>
                                 </a>
                             </div>
@@ -632,47 +635,47 @@
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
   ></script>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const shareButtons = document.querySelectorAll('.share-btn');
-      const snackbar = document.getElementById('snackbar');
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+  <div id="snackbarToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        Link copied to clipboard!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
 
-      function showSnackbar() {
-        snackbar.style.visibility = 'visible';
-        snackbar.style.opacity = '1';
-        setTimeout(() => {
-          snackbar.style.visibility = 'hidden';
-          snackbar.style.opacity = '0';
-        }, 3000);
-      }
-
-      shareButtons.forEach(button => {
-        button.addEventListener('click', function (e) {
-          e.preventDefault();
-          const postUrl = this.getAttribute('data-post-url');
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText(postUrl).then(() => {
-              showSnackbar();
-            }).catch(() => {
-              alert('Failed to copy the link.');
-            });
-          } else {
-            // fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = postUrl;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-              document.execCommand('copy');
-              showSnackbar();
-            } catch (err) {
-              alert('Failed to copy the link.');
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.share-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-post-url');
+            // Copy to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() {
+                    showSnackbar();
+                });
+            } else {
+                // fallback for old browsers
+                const tempInput = document.createElement('input');
+                tempInput.value = url;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showSnackbar();
             }
-            document.body.removeChild(textArea);
-          }
         });
-      });
     });
-  </script>
+
+    function showSnackbar() {
+        var toastEl = document.getElementById('snackbarToast');
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+});
+</script>
 </body>
 </html>.

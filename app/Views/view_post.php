@@ -3,8 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BEEKL • <?= $post['titlePost']?></title>
-
+  <?php 
+    //get titlePost from postforum
+    if(isset($postforum) && count($postforum) > 0) {
+        $titlePost = $postforum[0]['titlePost'];
+        echo "<title> BEEKL • $titlePost </title>";
+    } else {
+        echo "<title> BEEKL • </title>";
+    }
+  ?>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -538,8 +545,8 @@
                             </div>
                            <div class="me-3">
                                <a href="#share" class="text-decoration-none text-dark share-btn" data-post-url="<?= base_url('/post/' . urlencode($post['titlePost'])) ?>">
-                                   <i class="fas fa-share me-1"></i>
-                               </a>
+                                <i class="fas fa-share me-1"></i>
+                            </a>
                            </div>
                        </div>
                    </div>
@@ -672,10 +679,13 @@
                                 </div>
                             </div>
                             <div class="me-3">
-                               <a href="#share" class="text-decoration-none text-dark share-btn" data-post-url="<?= base_url('/post/' . urlencode($post['titlePost'])) ?>">
-                                   <i class="fas fa-share me-1"></i>
-                               </a>
-                           </div>
+                                <a href="#share" 
+                                class="share-btn text-decoration-none text-dark" 
+                                data-post-url="<?= base_url('post/' . urlencode($post['titlePost'])) ?>"
+                                title="Share this post">
+                                    <i class="fas fa-share me-1"></i>
+                                </a>
+                            </div>
                        </div>
                        <!-- Comment form -->
                         <form action="/addComment_atHomePage/<?php echo $post['postID'] ?>" method="post">
@@ -760,52 +770,48 @@
     </div>
   </main>
 
-  <!-- Snackbar container -->
-  <div id="snackbar" style="visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 2px; padding: 16px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-size: 17px;">
-    Link has copied.
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+  <div id="snackbarToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        Link copied to clipboard!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
   </div>
+</div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const shareButtons = document.querySelectorAll('.share-btn');
-      const snackbar = document.getElementById('snackbar');
-
-      function showSnackbar() {
-        snackbar.style.visibility = 'visible';
-        snackbar.style.opacity = '1';
-        setTimeout(() => {
-          snackbar.style.visibility = 'hidden';
-          snackbar.style.opacity = '0';
-        }, 3000);
-      }
-
-      shareButtons.forEach(button => {
-        button.addEventListener('click', function (e) {
-          e.preventDefault();
-          const postUrl = this.getAttribute('data-post-url');
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText(postUrl).then(() => {
-              showSnackbar();
-            }).catch(() => {
-              alert('Failed to copy the link.');
-            });
-          } else {
-            // fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = postUrl;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-              document.execCommand('copy');
-              showSnackbar();
-            } catch (err) {
-              alert('Failed to copy the link.');
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.share-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-post-url');
+            // Copy to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() {
+                    showSnackbar();
+                });
+            } else {
+                // fallback for old browsers
+                const tempInput = document.createElement('input');
+                tempInput.value = url;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showSnackbar();
             }
-            document.body.removeChild(textArea);
-          }
         });
-      });
     });
-  </script>
+
+    function showSnackbar() {
+        var toastEl = document.getElementById('snackbarToast');
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+});
+</script>
 </body>
 </html>
