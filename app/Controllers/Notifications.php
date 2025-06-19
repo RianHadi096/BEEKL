@@ -11,37 +11,27 @@ class Notifications extends BaseController
 {
     public function index()
     {
-        //get all notifications with 'post' type
         $notificationModel = new NotificationModel();
-        $session = session();
-        $userID = $session->get('id');
-        $data['notificationsPost'] = $notificationModel
-            ->where('userID', $userID)
-            ->where('type', 'post')
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
-
-        //get all notifications with 'like' type
-        $data['notificationsLike'] = $notificationModel
-            ->where('type', 'like')
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
-
-        //get all notifications with 'comment' type
-        $data['notificationsComment'] = $notificationModel
-            ->where('type', 'comment')
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
-
-        //get user data
-        $userModel = new UserModel();
-        $data['user'] = $userModel->where('id', $userID)->first();
-        $data['name'] = $data['user']['name'];
-
+        $userID = session()->get('id');
+        $data['notifications'] = $notificationModel->where('userID', $userID)->orderBy('created_at', 'DESC')->findAll();
+        
         //mark notifications as read
         $notificationModel->where('userID', $userID)->set(['isRead' => 1])->update();
-
-        //load view
         return view('notifications_page', $data);
+    }
+
+    public function delete($notificationID)
+    {
+        $notificationModel = new NotificationModel();
+        $userID = session()->get('id');
+
+        // Verify notification belongs to the user
+        $notification = $notificationModel->where('notificationID', $notificationID)->where('userID', $userID)->first();
+        if ($notification) {
+            $notificationModel->delete($notificationID);
+            return redirect()->to('/notifications')->with('success', 'Notification deleted successfully.');
+        } else {
+            return redirect()->to('/notifications')->with('error', 'Notification not found or unauthorized.');
+        }
     }
 }

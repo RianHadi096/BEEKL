@@ -3,17 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BEEKL • Notifications</title>
+  <title>BEEKL • <?= $_SESSION['name']?></title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/escape-html/1.0.3/escape-html.min.js"></script>
-
+ 
   <style>
     body {
       background-color: #f8f9fa; 
@@ -164,9 +163,6 @@
     .send-comment-btn:hover {
       color: #0056b3;
     }
-    .comment-indentity{
-        margin-right: 15px;
-    }
     </style>
 </head>
 <body>
@@ -203,29 +199,65 @@
             width="40"
             height="40"/>
             <?php
-                if(session()->get('name')) { ?>
-                    <?php echo session()->get('name'); ?>
-                <?php } else { ?>
-                    <?php echo 'Anonymous'; ?>
-                <?php } ?>
+                if(session()->get('name')) {
+                    echo session()->get('name');
+                } else {
+                    echo 'Anonymous';
+                }
+            ?>
           </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
             <?php
-                if(session()->get('name')) { ?>
-                    <li><a class="dropdown-item" href="/profile/<?=session()->get('name')?>"><i class="fas fa-user-circle" aria-hidden="true"></i>
-                    Profile
-                    </a></li>
-                    <li><a class="dropdown-item" href="logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
+                if(session()->get('name')) {
+                    echo '<li><a class="dropdown-item" href="/home">
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                    Back to Home
+                    </a></li>';
+                    echo '<li><a class="dropdown-item" href="logout">
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>
                     Sign Out
-                    </a></li>
-                <?php } else { ?>
-                    <li>
+                    </a></li>';
+                } else {
+                    echo '<li>
                     <a class="dropdown-item" href="login">
                     <i class="fa fa-sign-in" aria-hidden="true"></i>
-                    Sign In</a></li>
-                <?php } ?>
-            
+                    Sign In</a></li>';
+                }
+            ?>
         </ul>
+        <?php
+            if (session()->get('name')) { // Check if user is logged in
+            // Display notification icon only if user is logged in
+        ?>
+        <div class="dropdown ms-3">
+            <?php
+                //count how many notifications from user
+                $notificationModel = new \App\Models\NotificationModel();
+                $notificationcount = $notificationModel->
+                where('userID', session()->get('id'))
+                ->where('isRead', 0)
+                ->countAllResults();
+            ?>
+            <button
+                class="btn btn-outline-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <i class="fas fa-bell"></i>  <?php echo $notificationcount ?>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <?php
+                    if($notificationcount > 0) {
+                        echo '<li><a class="dropdown-item" href="/notifications">Yeay. You have '.$notificationcount.' new notifications</a></li>';
+                    } else {
+                        echo '<li><a class="dropdown-item" href="/notifications">No new notifications. See if you like</a></li>';
+                    }
+                ?>
+            </ul>
+        </div>
+        <?php }?>
         <div class="dropdown ms-3">
           <button
             class="btn btn-outline-secondary dropdown-toggle"
@@ -253,9 +285,9 @@
     <div class="row">
       <!-- Sidebar Kiri -->
       <aside class="col-md-2 mb-4">
-        <div class="card-left">
+      <div class="card-left">
             <div class="card-body">
-            <p class="fw-bold ">What do you want today?</p>
+            <p class="fw-bold text-md-center">What do you want today?</p>
                 <nav class="nav flex-column">
                     <a href="/home" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Home</a>
                     <a href="#" class="btn btn-outline-black me-2 m-1" role="button"><i class="fas fa-home me-2"></i>Community</a>
@@ -279,9 +311,9 @@
         </div>
       </aside>
   
-        <!-- Modal Body -->
-        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-        <div
+    <!-- Modal Body -->
+    <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+    <div
         class="modal fade"
         id="modalWritePost"
         tabindex="-1"
@@ -297,8 +329,7 @@
             role="document"
         >
             <div class="modal-content">
-                <form action="/postfromhomepage" method="post" enctype="multipart/form-data"><!-- update bug-->
-                    
+                <form action="/postfromprofilepage" method="post" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitleId">
                             Post your content
@@ -348,7 +379,7 @@
                     <div class="modal-footer">
                         <div class="form-group mb-3">
                               <label class="custom-file">
-                                <input type="file" name="images" placeholder="example.jpeg [must be .jpeg/.png]" class="custom-file-input" aria-describedby="fileHelpId">
+                                <input type="file" name="images" type="file" placeholder="example.jpeg [must be .jpeg/.png]" class="custom-file-input" aria-describedby="fileHelpId">
                                 <span class="custom-file-control"></span>
                               </label>
                             </div>    
@@ -369,65 +400,46 @@
             </div>
         </div>
     </div>
+    
     <!-- Optional: Place to the bottom of scripts -->
+                
 
     <!-- Bagian Konten Tengah -->
-    <section class="col-md-7 mb-4">
-        <?php
-            $session = session();
-            $userID = $session->get('id');
-            //if post notifications is available
-            if (!empty($notificationsPost)) {
-                //if the userID is the same as the post notification userID
-                if ($userID == $notificationsPost[0]['userID']) {
-                    // Loop through each post notification
-                    foreach ($notificationsPost as $notification_post) {?>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"> You posted a new content. </h5>
-                                <p class="card-text"><small class="text-muted">Posted on <?= date('d M Y H:i', strtotime($notification_post['created_at']))?></small></p>
-                            </div>
+        <section class="col-md-7 mb-4">
+            <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Your Notifications</h5>
+            <?php if (!empty($notifications) && is_array($notifications)): ?>
+              <ul class="list-group list-group-flush">
+                <?php foreach ($notifications as $notification): ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                        <?php if ($notification['type'] === 'like'): ?>
+                            <i class="fas fa-heart text-danger"></i>
+                            <strong>Like:</strong>
+                            <?= esc($notification['message']) ?>
+                        <?php else: ?>
+                            <strong><?= esc(ucfirst($notification['type'])) ?>:</strong>
+                            <?= esc($notification['message']) ?>
+                        <?php endif; ?>
+                        <br />
+                        <small class="text-muted"><?= date('F j, Y, g:i a', strtotime($notification['created_at'])) ?></small>
                         </div>
-                        <?php
-                        //delete the post notification with anchor button
-                    }
-                }else{
-                    foreach ($notificationsPost as $notification_post) {?>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><?= esc($notification_like['message']) ?></h5>
-                                <p class="card-text"><small class="text-muted">Posted on <?= date('d M Y H:i', strtotime($notification_post['created_at']))?></small></p>
-                            </div>
+                        <div>
+                        <a href="/notifications/delete/<?= esc($notification['notificationID']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this notification?');">Delete</a>
                         </div>
-                        <?php
-                    }
-                }
-            }else{
-                echo '<div class="card mb-3">';
-                echo '<div class="card-body">';
-                echo '<p class="card-text"><small class="text-muted">You have no new notifications</small></p>';
-                echo '</div>';
-                echo '</div>';
-            }
-            //if like notifications is available
-            if (!empty($notificationsLike)) {
-                //check if they has different user
-                if ($userID != $notificationsLike[0]['userID']) {
-                    // Loop through each like notification
-                    foreach ($notificationsLike as $notification_like) {
-                        echo '<div class="card mb-3">';
-                        echo '<div class="card-body">';
-                        echo '<h5 class="card-title">' . esc($notification_like['message']) . '</h5>';
-                        echo '<p class="card-text"><small class="text-muted">Liked on ' . date('d M Y H:i', strtotime($notification_like['created_at'])) . '</small></p>';
-                        echo '</div>';
-                        echo '</div>';
-                    }
-                }
-            }
-        ?>
-    </section>
+                    </li>
+                <?php endforeach; ?>
+              </ul>
+            <?php else: ?>
+              <p>No notifications found.</p>
+            <?php endif; ?>
+          </div>
+        </div>
+        </section>
+
       <!-- Sidebar Kanan -->
-    <aside class="col-md-3 mb-4">
+      <aside class="col-md-3 mb-4">
         <!--
         <div class="card mb-4">
           <div class="card-body">
@@ -471,10 +483,59 @@
             </div>
           </div>
         </div>
-    </aside>
+      </aside>
     </div>
   </main>
 
 
+  <script
+    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+  ></script>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+  <div id="snackbarToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        Link copied to clipboard!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.share-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-post-url');
+            // Copy to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() {
+                    showSnackbar();
+                });
+            } else {
+                // fallback for old browsers
+                const tempInput = document.createElement('input');
+                tempInput.value = url;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showSnackbar();
+            }
+        });
+    });
+
+    function showSnackbar() {
+        var toastEl = document.getElementById('snackbarToast');
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+});
+</script>
 </body>
 </html>.

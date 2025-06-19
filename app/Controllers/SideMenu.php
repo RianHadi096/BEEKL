@@ -11,13 +11,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class SideMenu extends BaseController
 {
-    
-    public function likePost($id=null)
+        public function likePost_atHomePage($id=null)
     {
-        
         //get postID
         $postModel = new PostModel();
-        $data['postID']=$postModel->where('postID', $id)->first();
 
         //like post
         $likeModel = new LikeModel();
@@ -33,19 +30,74 @@ class SideMenu extends BaseController
         $likeCount = $likeModel->where('postID', $id)->countAllResults();
         $postModel->update($id, ['likes' => $likeCount]);
 
-        //create message from notifications table
+        //get user name
         $userModel = new UserModel();
         $data['userID'] = $userModel->where('id', $userID)->first();
         $name = $data['userID']['name'];
+
+        // Create notification for successful like
         $notificationModel = new NotificationModel();
+        // Get post owner's userID
+        $postOwner = $postModel->find($id);
+        $postOwnerUserID = $postOwner['userID'] ?? null;
+        // Create notification
+        $notificationData = [
+            'userID' => $postOwnerUserID,
+            'type' => 'like',
+            'message' => $name . ' liked your post with title: ' . $postOwner['titlePost'],
+            'isRead' => 0, // Set notification as unread
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        if ($postOwnerUserID && $postOwnerUserID != $userID) {
+            $notificationModel->insert($notificationData);
+        }
+
+        //return to the home page
+        return redirect()->to('/home')->with('success', 'Post Liked Successfully');
+    }
+
+    public function likePost($id=null)
+    {
+        
+        //get postID
+        $postModel = new PostModel();
+        $post = $postModel->where('postID', $id)->first();
+
+        //like post
+        $likeModel = new LikeModel();
+        $session = session();
+        $userID = $session->get('id');
         $data = [
             'userID' => $userID,
-            'type' => 'like',
-            'message' => $name.' liked your post',
-            'isRead' => 0,
-            'created_at' => date('Y-m-d H:i:s'),
+            'postID' => $id,
         ];
-        $notificationModel->insert($data);
+        $likeModel->insert($data);
+
+        //count likes
+        $likeCount = $likeModel->where('postID', $id)->countAllResults();
+        $postModel->update($id, ['likes' => $likeCount]);
+
+        //get user name
+        $userModel = new UserModel();
+        $data['userID'] = $userModel->where('id', $userID)->first();
+        $name = $data['userID']['name'];
+
+        // Create notification for successful like
+        $notificationModel = new NotificationModel();
+        // Get post owner's userID
+        $postOwner = $postModel->find($id);
+        $postOwnerUserID = $postOwner['userID'] ?? null;
+        // Create notification
+        $notificationData = [
+            'userID' => $postOwnerUserID,
+            'type' => 'like',
+            'message' => $name . ' liked your post with title: ' . $postOwner['titlePost'],
+            'isRead' => 0, // Set notification as unread
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        if ($postOwnerUserID && $postOwnerUserID != $userID) {
+            $notificationModel->insert($notificationData);
+        }
 
         //return to the profile page with $name
         $session = session();
@@ -103,50 +155,9 @@ class SideMenu extends BaseController
         $postModel->update($id, ['likes' => $likeCount]);
         
         //return to the profile page with $name
-        return redirect()->to('/')->with('success', 'Post Unliked Successfully');
+        return redirect()->to('/home')->with('success', 'Post Unliked Successfully');
     }
-    public function likePost_atHomePage($id=null)
-    {
-        //get postID
-        $postModel = new PostModel();
-        $data['postID']=$postModel->where('postID', $id);
-
-        //like post
-        $likeModel = new LikeModel();
-        $session = session();
-        $userID = $session->get('id');
-        $data = [
-            'userID' => $userID,
-            'postID' => $id,
-        ];
-        $likeModel->insert($data);
-
-        //count likes
-        $likeCount = $likeModel->where('postID', $id)->countAllResults();
-        $postModel->update($id, ['likes' => $likeCount]);
-
-        //create message from notifications table
-        $userModel = new UserModel();
-        $data['userID'] = $userModel->where('id', $userID)->first();
-        $name = $data['userID']['name'];
-        $notificationModel = new NotificationModel();
-        $data = [
-            'userID' => $userID,
-            'type' => 'like',
-            'message' => $name.' liked your post',
-            'isRead' => 0,
-            'created_at' => date('Y-m-d H:i:s'),
-        ];
-        $notificationModel->insert($data);
-
-        //return to the profile page with $name
-        $session = session();
-        $userID = $session->get('id');
-        $userModel = new UserModel();
-        $data['userID'] = $userModel->where('id', $userID)->first();
-        $name = $data['userID']['name'];
-        return redirect()->to('/')->with('success', 'Post Liked Successfully');
-    }
+        
     //delete post
     public function deletePost($id=null)
     {
