@@ -100,7 +100,15 @@
 <header class="m-2">
     <div class="container header-container d-flex justify-content-between align-items-center">
         
-        <div class="header-logo">LOGO</div>
+        <div class="header-logo">
+            <a href="/">
+                <img
+                    src="<?= base_url('beekllogo.png') ?>"
+                    alt="BEEKL Logo"
+                    style="height:40px; width:auto;"
+                />
+            </a>
+        </div>
             <!-- Bagian Kanan Header -->
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-secondary rounded-pill me-3">

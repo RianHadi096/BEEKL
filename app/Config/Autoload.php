@@ -92,6 +92,6 @@ class Autoload extends AutoloadConfig
      */
     
 
-    public $helpers = ['session'];
+    public $helpers = ['session'.'url'];
 
 }

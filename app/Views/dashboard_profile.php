@@ -259,7 +259,15 @@ $userModel = new \App\Models\UserModel();
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
       
-      <div class="header-logo">LOGO</div>
+      <div class="header-logo">
+            <a href="/">
+                <img
+                    src="<?= base_url('beekllogo.png') ?>"
+                    alt="BEEKL Logo"
+                    style="height:40px; width:auto;"
+                />
+            </a>
+        </div>
 
       <!-- Search Bar -->
       <div class="search-wrapper">
