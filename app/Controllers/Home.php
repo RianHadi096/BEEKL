@@ -50,6 +50,12 @@ class Home extends BaseController
         //Get Model
         $model = new PostModel();
         $commentModel = new CommentModel();
+        $userModel = new UserModel();
+        $session = session();
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
         //get all data from postforum and user
         $data['postforum'] = $model->join('users', 'users.id = postforum.userID')->findAll();
         //translating genre to english
@@ -93,6 +99,7 @@ class Home extends BaseController
             ->findAll();
 
         $data['trendingWords'] = $this->getTrendingWords();
+        $data['user'] = $user;
 
         //return to dashboard page
         return view('dashboard',$data);
@@ -102,9 +109,12 @@ class Home extends BaseController
     {
         //Get Model
         $model = new PostModel();
+        $userModel = new \App\Models\UserModel();
         //Get Session ID
         $session = session();
         $userID = $session->get('id');
+        //get user data
+        $user = $userModel->find($userID);
         //get all data from postforum with userID
         $data['postforum'] = $model->join('users', 'users.id = postforum.userID')
                                     ->where('userID', $userID)
@@ -150,14 +160,21 @@ class Home extends BaseController
             ->join('comments', 'comments.postID = postforum.postID', 'left')
             ->groupBy('postforum.postID')
             ->findAll();
+
+        $data['user'] = $user;
         return view('dashboard_profile',$data);
     }
     public function viewPost($titlePost = null){
         //Get Model
         $model = new PostModel();
+        $userModel = new UserModel();
         //Get Session ID
         $session = session();
         $userID = $session->get('id');
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
         //get all data from postforum with userID
         $data['postforum'] = $model
             ->join('users', 'users.id = postforum.userID')

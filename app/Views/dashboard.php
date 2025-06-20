@@ -1,3 +1,6 @@
+<?php
+$userModel = new \App\Models\UserModel();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +11,13 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="<?= base_url('css/beeklplus.css') ?>">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/escape-html/1.0.3/escape-html.min.js"></script>
+    <script src="<?= base_url('js/beeklplus.js') ?>"></script>
 
   <style>
     body {
@@ -169,7 +174,7 @@
     }
     </style>
 </head>
-<body>
+<body class="<?= isset($user['dark_mode']) && $user['dark_mode'] ? 'dark-mode' : '' ?>" data-user='<?= json_encode($user ?? []) ?>'>
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
       <div class="header-logo">LOGO</div>
@@ -189,9 +194,13 @@
 
       <!-- Bagian Kanan Header -->
       <div class="d-flex align-items-center">
-        <button class="btn btn-outline-secondary rounded-pill me-3">
-          Try BEEKL+
-        </button>
+        <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+            <!-- Removed separate Change Frame dropdown and Dark Mode toggle button -->
+        <?php else: ?>
+            <a href="/beeklplus/pricing" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
+                Try BEEKL+
+            </a>
+        <?php endif; ?>
         <button
             class="btn btn-outline-secondary dropdown-toggle rounded-pill me-3"
             type="button"
@@ -199,33 +208,58 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-            alt="User avatar"
-            class="rounded-circle"
-            width="40"
-            height="40"/>
+            <div class="avatar-frame <?= isset($_SESSION['avatar_frame']) ? 'frame-'.$_SESSION['avatar_frame'] : '' ?>">
+                <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                alt="User avatar"
+                class="rounded-circle"
+                width="40"
+                height="40"/>
+                <?php if(isset($_SESSION['is_premium']) && $_SESSION['is_premium']): ?>
+                    <span class="premium-badge">+</span>
+                <?php endif; ?>
+            </div>
             <?php
-                if(session()->get('name')) { ?>
-                    <?php echo session()->get('name'); ?>
-                <?php } else { ?>
-                    <?php echo 'Anonymous'; ?>
-                <?php } ?>
+                if(session()->get('name')) {
+                    echo session()->get('name');
+                } else {
+                    echo 'Anonymous';
+                }
+            ?>
           </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-            <?php
-                if(session()->get('name')) { ?>
-                    <li><a class="dropdown-item" href="/profile/<?=session()->get('name')?>"><i class="fas fa-user-circle" aria-hidden="true"></i>
-                    Profile
-                    </a></li>
-                    <li><a class="dropdown-item" href="logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
-                    Sign Out
-                    </a></li>
-                <?php } else { ?>
-                    <li>
+            <?php if(session()->get('name')): ?>
+                <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+                    <li><a class="dropdown-item d-flex align-items-center" href="#" id="dropdownDarkModeToggle">
+                        <i class="fas fa-moon me-2"></i><span>Dark Mode</span></a>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a class="dropdown-item d-flex align-items-center" href="#" id="dropdownFrameToggle">
+                            <i class="fas fa-image me-2"></i><span>Change Frame</span>
+                        </a>
+                        <ul class="dropdown-menu" id="frameSubmenu" style="display:none;">
+                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('gold')"><i class="fas fa-circle text-warning me-2"></i>Gold Frame</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('diamond')"><i class="fas fa-gem text-info me-2"></i>Diamond Frame</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('rainbow')"><i class="fas fa-rainbow text-success me-2"></i>Rainbow Frame</a></li>
+                        </ul>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                <?php endif; ?>
+                <li><a class="dropdown-item" href="/profile/<?= session()->get('name') ?>">
+                    <i class="fas fa-user-circle" aria-hidden="true"></i> Profile
+                </a></li>
+                <li>
+                    <a class="dropdown-item" href="logout">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
+                    </a>
+                </li>
+            <?php else: ?>
+                <li>
                     <a class="dropdown-item" href="login">
-                    <i class="fa fa-sign-in" aria-hidden="true"></i>
-                    Sign In</a></li>
-                <?php } ?>
+                        <i class="fa fa-sign-in" aria-hidden="true"></i> Sign In
+                    </a>
+                </li>
+                
+            <?php endif; ?>
         </ul>
         <?php
             if (session()->get('name')) { // Check if user is logged in
@@ -427,15 +461,26 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                            <div class="d-flex align-items-center">
-                               <img
-                               src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-                               class="rounded-circle me-2"
-                               width="40"
-                               height="40"
-                               />
+                               <?php
+                                    $postUser = $userModel->find($post['userID']);
+                                    $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && isset($postUser['avatar_frame']);
+                                ?>
+                               <div class="<?= $hasFrame ? 'avatar-frame frame-'.$postUser['avatar_frame'] : '' ?> me-2">
+                                    <img
+                                    src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                                    class="rounded-circle"
+                                    width="40"
+                                    height="40"
+                                    />
+                                    <?php if($hasFrame): ?>
+                                        <span class="premium-badge">+</span>
+                                    <?php endif; ?>
+                               </div>
                                <div>
-                                   <div class="fw-bold">
-                                       <a class="text-decoration-none text-dark" href="/post/<?= $post['titlePost']?>"> <?= $post['titlePost']?> </a></br>
+<div class="fw-bold mb-1">
+    <a class="text-decoration-none text-dark" href="/post/<?= $post['titlePost']?>"> <?= $post['titlePost']?> </a>
+</div>
+                                   <div>
                                        <span class="badge bg-secondary"><?php echo $post['genre']?></span>
                                    </div>
                                    <div class="text-muted">
@@ -484,11 +529,11 @@
                                 
                             ?>
                             
-                            <div class="me-3">
-                                <a href="#" onclick="loadComments(<?= $post['postID'] ?>) id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
-                                    <i class="fas fa-comment me-1"></i><?= $commentCount?>
-                                </a>
-                            </div>
+<div class="me-3">
+    <a href="#" onclick="loadComments(<?= $post['postID'] ?>)" id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
+        <i class="fas fa-comment me-1"></i><?= $commentCount?>
+    </a>
+</div>
                             <div class="modal fade" id="commentModal<?php echo $post['postID']?>" tabindex="-1" aria-labelledby="commentModalLabel<?php echo $post['postID']?>" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable">
                                     <div class="modal-content">
@@ -535,14 +580,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="me-3">
-                                <a href="#share" 
-                                class="share-btn text-decoration-none text-dark" 
+<div class="me-3">
+<a href="#share" 
+class="share-btn text-decoration-none text-dark" 
                                 data-post-url="<?= base_url('post/' . urlencode($post['titlePost'])) ?>"
                                 title="Share this post">
                                     <i class="fas fa-share me-1"></i>
                                 </a>
-                            </div>
+</div>
                        </div>
                    </div>
                </div>
@@ -552,15 +597,26 @@
                    <div class="card-body">
                        <div class="d-flex justify-content-between align-items-center mb-3">
                            <div class="d-flex align-items-center">
-                               <img
-                               src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-                               class="rounded-circle me-2"
-                               width="40"
-                               height="40"
-                               />
+                               <?php
+                                    $postUser = $userModel->find($post['userID']);
+                                    $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && isset($postUser['avatar_frame']);
+                                ?>
+                               <div class="<?= $hasFrame ? 'avatar-frame frame-'.$postUser['avatar_frame'] : '' ?> me-2">
+                                    <img
+                                    src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                                    class="rounded-circle"
+                                    width="40"
+                                    height="40"
+                                    />
+                                    <?php if($hasFrame): ?>
+                                        <span class="premium-badge">+</span>
+                                    <?php endif; ?>
+                               </div>
                                <div>
-                                   <div class="fw-bold">
-                                    <a class="text-decoration-none text-dark" href="/post/<?= $post['titlePost']?>"> <?= $post['titlePost']?> </a></br>
+                                   <div class="fw-bold mb-1">
+                                       <a class="text-decoration-none text-dark" href="/post/<?= $post['titlePost']?>"> <?= $post['titlePost']?> </a>
+                                   </div>
+                                   <div>
                                        <span class="badge bg-secondary"><?php echo $post['genre']?></span>
                                    </div>
                                    <div class="text-muted">
@@ -623,7 +679,7 @@
                                     }
                                 
                             ?>
-                                <a href="#" onclick="loadComments(<?= $post['postID'] ?>) id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
+                                <a href="#" onclick="loadComments(<?= $post['postID'] ?>)" id="load-comment" role="button" data-bs-toggle="modal" data-bs-target="#commentModal<?php echo $post['postID']?>" class="text-decoration-none text-dark">
                                     <i class="fas fa-comment me-1"></i><?= $commentCount?>
                                 </a>
                             </div>
@@ -751,8 +807,8 @@
                 <ul class="list-group list-group-flush">
                     <?php if (!empty($trendingWords)): ?>
                         <?php foreach ($trendingWords as $word => $count): ?>
-                            <li class="list-group-item d-flex justify-content-between align-items-center text-md-center">
-                                <a class="text-decoration-none text-dark" href="search/trendings/<?= esc($word)?>"><?= esc($word) ?></a>
+                            <li class="list-group-item d-flex justify-content-between align-items-center text-md-center text-dark">
+<a class="text-decoration-none text-body" href="search/trendings/<?= esc($word)?>"><?= esc($word) ?></a>
                             </li>
                         <?php endforeach; ?>
                     <?php else: ?>

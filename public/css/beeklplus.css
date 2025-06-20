@@ -1,0 +1,173 @@
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode, 
+body.dark-mode p, 
+body.dark-mode span, 
+body.dark-mode a, 
+body.dark-mode label, 
+body.dark-mode input, 
+body.dark-mode textarea, 
+body.dark-mode select, 
+body.dark-mode button, 
+body.dark-mode .text-muted, 
+body.dark-mode .badge {
+    color: #e0e0e0 !important;
+}
+
+/* Dropdown menu items in dark mode */
+body.dark-mode .dropdown-menu {
+    background-color: #2d2d2d !important;
+    border-color: #404040 !important;
+}
+
+body.dark-mode .dropdown-menu .dropdown-item {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .dropdown-menu .dropdown-item:hover {
+    background-color: #404040 !important;
+}
+
+body.dark-mode a {
+    text-decoration: none !important;
+}
+
+body.dark-mode .card {
+    background-color: #2d2d2d !important;
+    border-color: #404040 !important;
+}
+
+body.dark-mode header {
+    background-color: #2d2d2d !important;
+    border-bottom-color: #404040 !important;
+}
+
+body.dark-mode .search-wrapper input {
+    background-color: #404040 !important;
+    color: #e0e0e0 !important;
+    border-color: #505050 !important;
+}
+
+body.dark-mode .nav-link,
+body.dark-mode .btn-outline-secondary {
+    color: #e0e0e0 !important;
+    border-color: #505050 !important;
+}
+
+body.dark-mode .btn-outline-secondary:hover {
+    background-color: #505050 !important;
+}
+
+/* Comment modal in dark mode */
+body.dark-mode .modal-content {
+    background-color: #2d2d2d !important;
+    border-color: #404040 !important;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+    border-color: #404040 !important;
+}
+
+body.dark-mode .modal-title,
+body.dark-mode .comment-author,
+body.dark-mode .comment-text {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .comment-input {
+    background-color: #404040 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .comment-time {
+    color: #adb5bd !important;
+}
+
+/* Avatar Frames */
+.avatar-frame {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-frame img {
+    position: relative;
+    z-index: 1;
+}
+
+/* Premium Frame Styles */
+.frame-gold {
+    border: 3px solid #FFD700;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #FFD700;
+}
+
+.frame-diamond {
+    border: 3px solid #B9F2FF;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #B9F2FF;
+    background: linear-gradient(45deg, #B9F2FF, #E3E3E3);
+}
+
+.frame-rainbow {
+    border: 3px solid transparent;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #8F00FF);
+    animation: rainbow 2s linear infinite;
+}
+
+@keyframes rainbow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.dark-mode .dark-mode-toggle {
+    background: #2d2d2d;
+    border-color: #505050;
+}
+
+/* Premium badge */
+.premium-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+/* Fix trending links color in dark mode */
+body.dark-mode .card .list-group-item a.text-dark {
+    color: #e0e0e0 !important;
+}
