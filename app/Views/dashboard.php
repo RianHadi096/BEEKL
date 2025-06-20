@@ -288,6 +288,18 @@ $userModel = new \App\Models\UserModel();
 
       <!-- Bagian Kanan Header -->
       <div class="d-flex align-items-center">
+        <?php if(!isset($user['is_premium']) || !$user['is_premium']): ?>
+            <?php if(!session()->get('name')): ?>
+                <a href="/login" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
+                    Try BEEKL+
+                </a>
+            <?php else: ?>
+                <a href="/beeklplus/pricing" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
+                    Try BEEKL+
+                </a>
+            <?php endif; ?>
+        <?php endif; ?>
+
         <button
             class="btn btn-outline-secondary dropdown-toggle rounded-pill me-3"
             type="button"
