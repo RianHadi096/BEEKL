@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light' ?>">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -163,9 +164,43 @@
     .send-comment-btn:hover {
       color: #0056b3;
     }
+    /* Override simple untuk dark mode */
+html[data-bs-theme="dark"] body {
+  background: #121212 !important;
+  color: #e1e1e1 !important;
+}
+html[data-bs-theme="dark"] header {
+  background: #1e1e1e !important;
+  border-color: #333 !important;
+}
+html[data-bs-theme="dark"] .card,
+html[data-bs-theme="dark"] .card-body {
+  background: #1e1e1e !important;
+  color: #e1e1e1 !important;
+  border-color: #333 !important;
+}
+html[data-bs-theme="dark"] .list-group-item {
+  background: #1e1e1e !important;
+  color: #e1e1e1 !important;
+}
+html[data-bs-theme="dark"] .btn-outline-secondary {
+  border-color: #555;
+  color: #e1e1e1;
+}
+html[data-bs-theme="dark"] .btn-outline-secondary:hover {
+  background: #333;
+  color: #fff;
+}
+
     </style>
 </head>
 <body>
+  <!-- DARK MODE TOGGLE BUTTON -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+    <i class="fa fa-moon"></i>
+  </button>
+</div>
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
       
@@ -537,5 +572,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+      <!-- DARK MODE TOGGLE SCRIPT -->
+<script>
+;(function(){
+  const btn  = document.getElementById('toggleMode'),
+        icon = btn.querySelector('i'),
+        html = document.documentElement;
+  btn.addEventListener('click', () => {
+    const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-bs-theme', next);
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+    fetch('<?= base_url('theme/set') ?>', {
+      method: 'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ theme: next })
+    });
+  });
+})();
+</script>
+
+
 </body>
 </html>.

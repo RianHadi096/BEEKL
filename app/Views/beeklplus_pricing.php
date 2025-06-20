@@ -155,6 +155,13 @@
     </style>
 </head>
 <body class="<?= isset($user['dark_mode']) && $user['dark_mode'] ? 'dark-mode' : '' ?>" data-user='<?= json_encode($user ?? []) ?>'>
+
+<div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+    <i class="fa fa-moon"></i>
+  </button>
+</div>
+
     <div class="pricing-card">
         <h1 class="pricing-title">BEEKL+</h1>
         <p class="pricing-subtitle">Unlock Premium Features & Enhance Your Experience</p>
@@ -237,5 +244,37 @@
             });
         });
     </script>
+    <script>
+  // Tunggu sampai elemen sudah ter-render
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('toggleMode');
+    const body = document.body;
+
+    btn.addEventListener('click', () => {
+      // Toggle class
+      body.classList.toggle('dark-mode');
+
+      // Ganti ikon moon/sun
+      const icon = btn.querySelector('i');
+      if (body.classList.contains('dark-mode')) {
+        icon.className = 'fa fa-sun';
+      } else {
+        icon.className = 'fa fa-moon';
+      }
+
+      // (Opsional) Simpan preference ke server via AJAX
+      fetch('/beeklplus/set-theme', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json',
+          '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
+        },
+        body: JSON.stringify({ dark_mode: body.classList.contains('dark-mode') })
+      });
+    });
+  });
+</script>
+
 </body>
 </html>

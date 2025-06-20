@@ -75,6 +75,10 @@ $routes->get('check-migration', 'CheckMigration::index');
     //ByTrendings
     $routes->get('/search/trendings/(:segment)', 'Search::searchAll_ByTrendings/$1');
 
+//Darkmode
+$routes->post('theme/set', 'Theme::set');
+
+
 // BEEKL+ premium features routes
 $routes->group('beeklplus', function($routes) {
     $routes->post('toggle-dark-mode', 'BeeklPlus::toggleDarkMode');
