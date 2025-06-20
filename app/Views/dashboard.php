@@ -301,6 +301,7 @@ $userModel = new \App\Models\UserModel();
                 </a>
             <?php endif; ?>
         <?php endif;?>
+        
         <button
             class="btn btn-outline-secondary dropdown-toggle rounded-pill me-3"
             type="button"
@@ -327,39 +328,36 @@ $userModel = new \App\Models\UserModel();
             ?>
           </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-            <?php if(session()->get('name')): ?>
-                <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
-                    <li><a class="dropdown-item d-flex align-items-center" href="#" id="dropdownDarkModeToggle">
-                        <i class="fas fa-moon me-2"></i><span>Dark Mode</span></a>
-                    </li>
-                    <li class="dropdown-submenu">
-                        <a class="dropdown-item d-flex align-items-center" href="#" id="dropdownFrameToggle">
-                            <i class="fas fa-image me-2"></i><span>Change Frame</span>
+                <?php if(session()->get('name')): ?>
+                    <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item d-flex align-items-center" href="#" id="dropdownFrameToggle">
+                                <i class="fas fa-image me-2"></i><span>Change Frame</span>
+                            </a>
+                            <ul class="dropdown-menu" id="frameSubmenu" style="display:none;">
+                                <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('gold')"><i class="fas fa-circle text-warning me-2"></i>Gold Frame</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('diamond')"><i class="fas fa-gem text-info me-2"></i>Diamond Frame</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('rainbow')"><i class="fas fa-rainbow text-success me-2"></i>Rainbow Frame</a></li>
+                            </ul>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                    <?php endif; ?>
+                    <li><a class="dropdown-item" href="/profile/<?= session()->get('name') ?>">
+                        <i class="fas fa-user-circle" aria-hidden="true"></i> Profile
+                    </a></li>
+                    <li>
+                        <a class="dropdown-item" href="logout">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
                         </a>
-                        <ul class="dropdown-menu" id="frameSubmenu" style="display:none;">
-                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('gold')"><i class="fas fa-circle text-warning me-2"></i>Gold Frame</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('diamond')"><i class="fas fa-gem text-info me-2"></i>Diamond Frame</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('rainbow')"><i class="fas fa-rainbow text-success me-2"></i>Rainbow Frame</a></li>
-                        </ul>
                     </li>
-                    <li><hr class="dropdown-divider"></li>
+                <?php else: ?>
+                    <li>
+                        <a class="dropdown-item" href="login">
+                            <i class="fa fa-sign-in" aria-hidden="true"></i> Sign In
+                        </a>
+                    </li>
+                    
                 <?php endif; ?>
-                <li><a class="dropdown-item" href="/profile/<?= session()->get('name') ?>">
-                    <i class="fas fa-user-circle" aria-hidden="true"></i> Profile
-                </a></li>
-                <li>
-                    <a class="dropdown-item" href="logout">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
-                    </a>
-                </li>
-            <?php else: ?>
-                <li>
-                    <a class="dropdown-item" href="login">
-                        <i class="fa fa-sign-in" aria-hidden="true"></i> Sign In
-                    </a>
-                </li>
-                
-            <?php endif; ?>
         </ul>
         <?php
             if (session()->get('name')) { // Check if user is logged in
