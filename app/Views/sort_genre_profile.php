@@ -161,7 +161,7 @@
     .send-comment-btn:hover {
       color: #0056b3;
     }
-       <!-- DARK MODE OVERRIDES -->
+
 /* background & teks umum */
   html[data-bs-theme="dark"] body {
     background-color: #121212 !important;
@@ -245,11 +245,15 @@
 </head>
 <body>
     <!-- DARK MODE TOGGLE BUTTON -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index:1500">
-  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
-  </button>
-</div>
+<?php if(session()->get('name')):?>
+    <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+        <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+            <i class="fa fa-moon"></i>
+        </button>
+        </div>
+    <?php endif;?>
+<?php endif;?>
 
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">

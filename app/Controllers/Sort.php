@@ -55,6 +55,15 @@ class Sort extends BaseController
             }
             return $post;
         }, $data['postforum']);
+
+        $userModel = new UserModel();
+        $session = session();
+        $userID = session()->get('id');
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
+        $data['user'] = $user;
         //check if there are posts with the specified genre
         //if (empty($data['postforum'])) {
         //    return redirect()->to('/')->with('error', 'No posts found for this genre.');
@@ -117,6 +126,15 @@ class Sort extends BaseController
             }
             return $post;
         }, $data['postforum']);
+
+        $userModel = new UserModel();
+        $session = session();
+        $userID = session()->get('id');
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
+        $data['user'] = $user;
         //check if there are posts with the specified genre
         //if (empty($data['postforum'])) {
         //    return redirect()->to('/profile')->with('error', 'No posts found for this genre.');

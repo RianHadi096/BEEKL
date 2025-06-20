@@ -71,6 +71,15 @@ class Search extends BaseController
         //save searchterm variable
         $data['searchTerm'] = $searchTerm;
 
+        $userModel = new UserModel();
+        $session = session();
+        $userID = session()->get('id');
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
+        $data['user'] = $user;
+
         // Pass results and search term to the view
         return view('search_results',$data);
     }
@@ -124,6 +133,15 @@ class Search extends BaseController
 
         //save searchterm variable
         $data['searchTerm'] = $searchTerm;
+
+        $userModel = new UserModel();
+        $session = session();
+        $userID = session()->get('id');
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
+        $data['user'] = $user;
 
         // Pass results and search term to the view
         return view('search_results',$data);
