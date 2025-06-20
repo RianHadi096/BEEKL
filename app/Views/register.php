@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-bs-theme="light" lang="en">
+<html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
 
 <head>
     <meta charset="utf-8">
@@ -11,9 +11,64 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- DARK MODE OVERRIDES -->
+<style>
+  html[data-bs-theme="dark"] body {
+    background-color: #121212 !important;
+    color: #f5f5f5;
+  }
+  html[data-bs-theme="dark"] .login-card {
+    background-color: #1e1e1e !important;
+    border-color: #444 !important;
+  }
+  html[data-bs-theme="dark"] .login-card p,
+  html[data-bs-theme="dark"] .login-card .profile-name-card {
+    color: #f5f5f5 !important;
+  }
+  html[data-bs-theme="dark"] .form-signin .form-control {
+    background-color: #2c2c2c !important;
+    color: #f5f5f5;
+    border-color: #555;
+  }
+  html[data-bs-theme="dark"] .form-signin .btn-primary {
+    background-color: #ff4d00 !important;
+    border-color: #ff4d00 !important;
+    color: #fff;
+  }
+  html[data-bs-theme="dark"] header,
+  html[data-bs-theme="dark"] .header-container {
+    background-color: #121212 !important;
+  }
+  html[data-bs-theme="dark"] header .header-logo,
+  html[data-bs-theme="dark"] header .dropdown-toggle,
+  html[data-bs-theme="dark"] header .btn-outline-secondary {
+    color: #f5f5f5 !important;
+    border-color: #555 !important;
+  }
+  html[data-bs-theme="dark"] .dropdown-menu {
+    background-color: #2c2c2c !important;
+    color: #f5f5f5 !important;
+  }
+  html[data-bs-theme="dark"] .checkbox label {
+    color: #f5f5f5 !important;
+  }
+  html[data-bs-theme="dark"] #toggleMode i {
+    color: #f5f5f5;
+  }
+</style>
+
+
 </head>
 
 <body>
+    <!-- DARK MODE TOGGLE BUTTON -->
+<div class="position-fixed top-0 end-0 p-3">
+  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+    <i class="fa fa-moon"></i>
+  </button>
+</div>
+
 <header class="m-2">
     <div class="container header-container d-flex justify-content-between align-items-center">
         
@@ -77,4 +132,26 @@
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
   ></script>
+
+<!-- DARK MODE TOGGLE SCRIPT -->
+<script>
+  (function(){
+    const btn  = document.getElementById('toggleMode');
+    const icon = btn.querySelector('i');
+    btn.addEventListener('click', () => {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-bs-theme', next);
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+      fetch('<?= base_url('theme/set') ?>', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({ theme: next })
+      });
+    });
+  })();
+</script>
+</html>
+
 </html>

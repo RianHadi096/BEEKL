@@ -90,5 +90,12 @@ class Autoload extends AutoloadConfig
      *
      * @var list<string>
      */
-    public $helpers = [];
+    
+
+    public $helpers = [
+    'url',      // base_url(), site_url(), redirect(), etc.
+    'form',     // form_open(), csrf_field(), set_value(), dll.
+    'session',  // session()->get(), session()->set(), flashdata, old(), dll.
+    ];
+
 }

@@ -2,7 +2,7 @@
 $userModel = new \App\Models\UserModel();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -172,9 +172,95 @@ $userModel = new \App\Models\UserModel();
     .comment-indentity{
         margin-right: 15px;
     }
+        /* background & teks umum */
+  html[data-bs-theme="dark"] body {
+    background-color: #121212 !important;
+    color: #f5f5f5;
+  }
+  /* header */
+  html[data-bs-theme="dark"] header {
+    background-color: #1e1e1e !important;
+    border-bottom-color: #333 !important;
+  }
+  html[data-bs-theme="dark"] .header-logo,
+  html[data-bs-theme="dark"] .btn-outline-secondary,
+  html[data-bs-theme="dark"] .dropdown-toggle {
+    color: #f5f5f5 !important;
+    border-color: #444 !important;
+  }
+  /* search input */
+  html[data-bs-theme="dark"] .search-wrapper input {
+    background-color: #2c2c2c !important;
+    color: #f5f5f5 !important;
+    border-color: #444 !important;
+  }
+  /* sidebar kiri & kanan */
+  html[data-bs-theme="dark"] aside .card,
+  html[data-bs-theme="dark"] .card-left {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+  }
+  html[data-bs-theme="dark"] .nav-link,
+  html[data-bs-theme="dark"] .btn-outline-black {
+    color: #f5f5f5 !important;
+    border-color: #444 !important;
+  }
+  /* konten tengah (post cards) */
+  html[data-bs-theme="dark"] .card {
+    background-color: #2a2a2a !important;
+    border-color: #444 !important;
+  }
+  html[data-bs-theme="dark"] .card-body,
+  html[data-bs-theme="dark"] .post-actions i,
+  html[data-bs-theme="dark"] .text-muted {
+    color: #e0e0e0 !important;
+  }
+  /* tombol */
+  html[data-bs-theme="dark"] .btn-primary,
+  html[data-bs-theme="dark"] .btn-follow {
+    background-color: #ff4d00 !important;
+    border-color: #ff4d00 !important;
+    color: #fff !important;
+  }
+  html[data-bs-theme="dark"] .btn-secondary,
+  html[data-bs-theme="dark"] .btn-outline-secondary {
+    background-color: #2c2c2c !important;
+    border-color: #444 !important;
+    color: #f5f5f5 !important;
+  }
+  /* dropdown menu & modal */
+  html[data-bs-theme="dark"] .dropdown-menu,
+  html[data-bs-theme="dark"] .modal-content {
+    background-color: #2c2c2c !important;
+    color: #f5f5f5 !important;
+  }
+  /* comment input */
+  html[data-bs-theme="dark"] .comment-input {
+    background-color: #1e1e1e !important;
+    color: #f5f5f5 !important;
+    border-color: #444 !important;
+  }
+  /* checkbox label, badge, link */
+  html[data-bs-theme="dark"] .checkbox label,
+  html[data-bs-theme="dark"] .badge,
+  html[data-bs-theme="dark"] a.text-decoration-none {
+    color: #f5f5f5 !important;
+  }
+  /* toast */
+  html[data-bs-theme="dark"] .toast {
+    background-color: #2c2c2c !important;
+    color: #f5f5f5 !important;
+  }
     </style>
 </head>
-<body class="<?= isset($user['dark_mode']) && $user['dark_mode'] ? 'dark-mode' : '' ?>" data-user='<?= json_encode($user ?? []) ?>'>
+<body data-user='<?= json_encode($user ?? []) ?>'>
+
+    <!-- DARK MODE TOGGLE BUTTON -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+    <i class="fa fa-moon"></i>
+  </button>
+</div>
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
       <div class="header-logo">LOGO</div>
@@ -407,8 +493,9 @@ $userModel = new \App\Models\UserModel();
                             </div>
                             <div data-mdb-input-init class="form-outline w-100">
                                 <label for="">Content</label>
-                                <textarea class="form-control mb-3" name='content' id="textAreaExample" rows="4"
-                                style="background: #fff;" placeholder="Tell me your Stories...."></textarea>
+                                <textarea class="form-control mb-3" name="content" id="textAreaExample" rows="4"
+                                  placeholder="Tell me your Stories...."></textarea>
+
                             </div>
                                
                         </div>
@@ -863,5 +950,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+    <!-- DARK MODE TOGGLE SCRIPT -->
+<script>
+  (function(){
+    const btn  = document.getElementById('toggleMode'),
+          icon = btn.querySelector('i'),
+          html = document.documentElement;
+    btn.addEventListener('click', () => {
+      const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-bs-theme', next);
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+      fetch('<?= base_url('theme/set') ?>', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ theme: next })
+      });
+    });
+  })();
+</script>
+
 </body>
 </html>

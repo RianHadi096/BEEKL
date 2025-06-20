@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
 <head>
     <meta charset="UTF-8">
     <title>Welcome to CodeIgniter 4!</title>
@@ -196,6 +196,22 @@
                 color: rgba(255, 255, 255, .8);
             }
         }
+        /* Dark mode overrides */
+html[data-bs-theme="dark"] {
+  background: #121212;
+  color: #eee;
+}
+html[data-bs-theme="dark"] header {
+  background: #1e1e1e;
+  border-color: #333;
+}
+html[data-bs-theme="dark"] section,
+html[data-bs-theme="dark"] .further {
+  background: #1e1e1e;
+}
+html[data-bs-theme="dark"] a { color: #66f; }
+html[data-bs-theme="dark"] .svg-stroke { stroke: #eee; }
+
     </style>
 </head>
 <body>
@@ -211,8 +227,14 @@
                 </a>
             </li>
             <li class="menu-toggle">
-                <button id="menuToggle">&#9776;</button>
-            </li>
+            <button id="menuToggle">&#9776;</button>
+                </li>
+                    <li class="menu-item hidden">
+                        <a href="#" id="darkModeToggle">
+                     <i class="fas fa-moon"></i> Dark Mode
+                         </a>
+                </li>
+
             <li class="menu-item hidden"><a href="#">Home</a></li>
             <li class="menu-item hidden"><a href="https://codeigniter.com/user_guide/" target="_blank">Docs</a>
             </li>
@@ -323,6 +345,27 @@
             menuItem.classList.toggle("hidden");
         }
     }
+    // Toggle mobile menu (tetap)
+document.getElementById("menuToggle").addEventListener('click', () => {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.toggle('hidden'));
+});
+
+// Toggle Dark Mode
+const darkToggle = document.getElementById('darkModeToggle');
+darkToggle.addEventListener('click', e => {
+  e.preventDefault();
+  const html = document.documentElement;
+  const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-bs-theme', next);
+
+  // (Opsional) kirim ke server supaya disimpan di session
+  fetch('/set-theme', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest' },
+    body: JSON.stringify({ theme: next })
+  });
+});
+
 </script>
 
 <!-- -->
