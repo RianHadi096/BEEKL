@@ -90,12 +90,6 @@
 
 
 <body>
-    <!-- DARK MODE TOGGLE BUTTON -->
-<div class="position-fixed top-0 end-0 p-3">
-  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
-  </button>
-</div>
 
 <header class="m-2">
     <div class="container header-container d-flex justify-content-between align-items-center">
@@ -111,9 +105,6 @@
         </div>
             <!-- Bagian Kanan Header -->
             <div class="d-flex align-items-center">
-                <button class="btn btn-outline-secondary rounded-pill me-3">
-                Try BEEKL+
-                </button>
                 <div class="dropdown ms-3">
                     <button
                         class="btn btn-outline-secondary dropdown-toggle"
@@ -160,7 +151,7 @@
                             background-color: #ff4d00;">
                             Log In</button>
                         <div style="margin-bottom: 30px;">
-                            <a class="forgot-password text-decoration-none text-secondary-emphasis" href="#"># I forgot my Password. Click Me.</a>
+                            <a class="forgot-password text-decoration-none text-secondary-emphasis" href="#"># I forgot my Password. </a>
                         </div>
                         <div style="margin-bottom: 0px;">
                             <a class="register text-decoration-none text-secondary-emphasis" href="/register"><center>Register here if you don't have a BEEKL account.</center></a>

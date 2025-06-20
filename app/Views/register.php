@@ -62,12 +62,7 @@
 </head>
 
 <body>
-    <!-- DARK MODE TOGGLE BUTTON -->
-<div class="position-fixed top-0 end-0 p-3">
-  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
-  </button>
-</div>
+
 
 <header class="m-2">
     <div class="container header-container d-flex justify-content-between align-items-center">
@@ -83,9 +78,7 @@
         </div>
         <!-- Bagian Kanan Header -->
         <div class="d-flex align-items-center">
-            <button class="btn btn-outline-secondary rounded-pill me-3">
-            Try BEEKL+
-            </button>
+            
             <div class="dropdown ms-3">
                     <button
                         class="btn btn-outline-secondary dropdown-toggle"
@@ -118,7 +111,7 @@
                     <?php if(isset($validation)):?>
                         <div class="alert alert-danger"><?= $validation->listErrors() ?></div>
                     <?php endif;?>
-                    <form action="/register/save" method="post" class="form-signin" style="padding-bottom: 52px;margin-bottom: -34px;">
+                    <form action="<?= base_url('register/save')?>" method="post" class="form-signin" style="padding-bottom: 52px;margin-bottom: -34px;">
                         <span class="reauth-email"> </span>
                         <input class="form-control" type="text" name="regist_name" id="InputForName" required="" placeholder="Username" value="<?= set_value('regist_name') ?>">
                         <input class="form-control" type="email" name="regist_email" id="InputForEmail" required="" placeholder="Email address" autofocus="" value="<?= set_value('regist_email') ?>">
@@ -126,6 +119,9 @@
                         <input class="form-control" type="password" name="confpassword" id="InputForConfPassword" required="" placeholder="Confirm Password">
                         <button class="btn btn-primary btn-lg d-block btn-signin w-100" type="submit" style="padding-bottom: 0px;margin-bottom: 0px;background-color: #ff4d00;">Sign up now.</button>
                     </form>
+                    <div style="margin-bottom: 0px;">
+                            <a class="register text-decoration-none text-secondary-emphasis" href="<?= base_url('login')?>"><center>Back to Login if you have already BEEKL account.</center></a>
+                    </div>
                 </div>
             </div>
         </div>

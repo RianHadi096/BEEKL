@@ -256,11 +256,15 @@ $userModel = new \App\Models\UserModel();
 <body data-user='<?= json_encode($user ?? []) ?>'>
 
     <!-- DARK MODE TOGGLE BUTTON -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
-  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
-  </button>
-</div>
+<?php if(session()->get('name')):?>
+    <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+        <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+            <i class="fa fa-moon"></i>
+        </button>
+        </div>
+    <?php endif;?>
+<?php endif;?>
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
       <div class="header-logo">
@@ -276,7 +280,7 @@ $userModel = new \App\Models\UserModel();
       <!-- Search Bar -->
       <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <form action="search" method="post">
+        <form action="<?= base_url('search')?>" method="post">
             <input
             type="text"
             class="form-control"
@@ -288,13 +292,15 @@ $userModel = new \App\Models\UserModel();
 
       <!-- Bagian Kanan Header -->
       <div class="d-flex align-items-center">
-        <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
-            <!-- Removed separate Change Frame dropdown and Dark Mode toggle button -->
-        <?php else: ?>
-            <a href="/beeklplus/pricing" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
-                Try BEEKL+
-            </a>
-        <?php endif; ?>
+        <?php if(session()->get('name')):?>
+            <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+                <!-- Removed separate Change Frame dropdown and Dark Mode toggle button -->
+            <?php else: ?>
+                <a href="/beeklplus/pricing" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
+                    Try BEEKL+
+                </a>
+            <?php endif; ?>
+        <?php endif;?>
         <button
             class="btn btn-outline-secondary dropdown-toggle rounded-pill me-3"
             type="button"
@@ -871,25 +877,25 @@ class="share-btn text-decoration-none text-dark"
             <div class="d-grid gap-2">
                 <!-- Baris 1 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Olahraga" class="badge bg-secondary text-decoration-none">Sport</a>
-                    <a href="genre/Anime" class="badge bg-secondary text-decoration-none">Anime</a>
-                    <a href="genre/Politik" class="badge bg-secondary text-decoration-none">Politic</a>
+                    <a href="<?= base_url('genre/Olahraga')?>" class="badge bg-secondary text-decoration-none">Sport</a>
+                    <a href="<?= base_url('genre/Anime')?>" class="badge bg-secondary text-decoration-none">Anime</a>
+                    <a href="<?= base_url('genre/Politik')?>" class="badge bg-secondary text-decoration-none">Politic</a>
                 </div>
                 <!-- Baris 2 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Film" class="badge bg-secondary text-decoration-none">Movie</a>
-                    <a href="genre/Berita" class="badge bg-secondary text-decoration-none">News</a>
-                    <a href="genre/Komedi" class="badge bg-secondary text-decoration-none">Comedy</a>
+                    <a href="<?= base_url('genre/Film')?>" class="badge bg-secondary text-decoration-none">Movie</a>
+                    <a href="<?= base_url('genre/Berita')?>" class="badge bg-secondary text-decoration-none">News</a>
+                    <a href="<?= base_url('genre/Komedi')?>" class="badge bg-secondary text-decoration-none">Comedy</a>
                 </div>
                 <!-- Baris 3 -->
                 <div class="d-flex justify-content-between align-item-center">
-                    <a href="genre/Buku" class="badge bg-secondary text-decoration-none">Book</a>
-                    <a href="genre/Otomotif" class="badge bg-secondary text-decoration-none">Automotive</a>
-                    <a href="genre/Teknologi" class="badge bg-secondary text-decoration-none">Technology</a>
+                    <a href="<?= base_url('genre/Buku')?>" class="badge bg-secondary text-decoration-none">Book</a>
+                    <a href="<?= base_url('genre/Otomotif')?>" class="badge bg-secondary text-decoration-none">Automotive</a>
+                    <a href="<?= base_url('genre/Teknologi')?>" class="badge bg-secondary text-decoration-none">Technology</a>
                 </div>
                 <!-- Baris 4 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Others" class="badge bg-secondary text-decoration-none">Others</a>
+                    <a href="<?= base_url('genre/Others')?>" class="badge bg-secondary text-decoration-none">Others</a>
                 </div>
             </div>
           </div>
@@ -903,7 +909,7 @@ class="share-btn text-decoration-none text-dark"
                     <?php if (!empty($trendingWords)): ?>
                         <?php foreach ($trendingWords as $word => $count): ?>
                             <li class="list-group-item d-flex justify-content-between align-items-center text-md-center text-dark">
-<a class="text-decoration-none text-body" href="search/trendings/<?= esc($word)?>"><?= esc($word) ?></a>
+<a class="text-decoration-none text-body" href="<?= base_url('search/trendings/')?><?= esc($word)?>"><?= esc($word) ?></a>
                             </li>
                         <?php endforeach; ?>
                     <?php else: ?>

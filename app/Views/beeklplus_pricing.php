@@ -158,7 +158,7 @@
 
 <div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
   <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
+    <i class="fa fa-moon"></i> Test Me
   </button>
 </div>
 
@@ -191,7 +191,7 @@
             <i class="fas fa-wallet"></i>
         </div>
 
-        <a href="/profile/<?= session()->get('id') ?>" class="back-link">
+        <a href="/profile/<?= session()->get('name') ?>" class="back-link">
             <i class="fas fa-arrow-left me-2"></i>Back to Profile
         </a>
     </div>

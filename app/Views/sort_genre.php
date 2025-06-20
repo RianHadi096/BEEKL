@@ -1,21 +1,28 @@
-<!DOCTYPE html>
+<?php
+$userModel = new \App\Models\UserModel();
+?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BEEKL • Sort by Genre</title>
+  <title>BEEKL • Home</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="<?= base_url('css/beeklplus.css') ?>">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/escape-html/1.0.3/escape-html.min.js"></script>
+    <script src="<?= base_url('js/beeklplus.js') ?>"></script>
 
   <style>
-    
+    body {
+      background-color: #f8f9fa; 
+    }
     /* Header */
     header {
       position: sticky;
@@ -162,8 +169,10 @@
     .send-comment-btn:hover {
       color: #0056b3;
     }
-    <!-- DARK MODE OVERRIDES -->
-/* background & teks umum */
+    .comment-indentity{
+        margin-right: 15px;
+    }
+        /* background & teks umum */
   html[data-bs-theme="dark"] body {
     background-color: #121212 !important;
     color: #f5f5f5;
@@ -244,16 +253,20 @@
   }
     </style>
 </head>
-<body>
-    <div class="position-fixed top-0 end-0 p-3" style="z-index:1500">
-  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
-  </button>
-</div>
+<body data-user='<?= json_encode($user ?? []) ?>'>
 
+    <!-- DARK MODE TOGGLE BUTTON -->
+<?php if(session()->get('name')):?>
+    <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+        <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+            <i class="fa fa-moon"></i>
+        </button>
+        </div>
+    <?php endif;?>
+<?php endif;?>
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
-      
       <div class="header-logo">
             <a href="/">
                 <img
@@ -267,18 +280,27 @@
       <!-- Search Bar -->
       <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search your thoughts"
-        />
+        <form action="<?= base_url('search')?>" method="post">
+            <input
+            type="text"
+            class="form-control"
+            name="search"
+            placeholder="Search your thoughts"
+            />
+        </form>
       </div>
 
       <!-- Bagian Kanan Header -->
       <div class="d-flex align-items-center">
-        <button class="btn btn-outline-secondary rounded-pill me-3">
-          Try BEEKL+
-        </button>
+        <?php if(session()->get('name')):?>
+            <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+                <!-- Removed separate Change Frame dropdown and Dark Mode toggle button -->
+            <?php else: ?>
+                <a href="/beeklplus/pricing" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
+                    Try BEEKL+
+                </a>
+            <?php endif; ?>
+        <?php endif;?>
         <button
             class="btn btn-outline-secondary dropdown-toggle rounded-pill me-3"
             type="button"
@@ -286,34 +308,58 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-            alt="User avatar"
-            class="rounded-circle"
-            width="40"
-            height="40"/>
+            <div class="avatar-frame <?= isset($_SESSION['avatar_frame']) ? 'frame-'.$_SESSION['avatar_frame'] : '' ?>">
+                <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                alt="User avatar"
+                class="rounded-circle"
+                width="40"
+                height="40"/>
+                <?php if(isset($_SESSION['is_premium']) && $_SESSION['is_premium']): ?>
+                    <span class="premium-badge">+</span>
+                <?php endif; ?>
+            </div>
             <?php
-                if(session()->get('name')) { ?>
-                    <?php echo session()->get('name'); ?>
-                <?php } else { ?>
-                    <?php echo 'Anonymous'; ?>
-                <?php } ?>
+                if(session()->get('name')) {
+                    echo session()->get('name');
+                } else {
+                    echo 'Anonymous';
+                }
+            ?>
           </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-            <?php
-                if(session()->get('name')) { ?>
-                    <li><a class="dropdown-item" href="/profile/<?=session()->get('name')?>"><i class="fas fa-user-circle" aria-hidden="true"></i>
-                    Profile
-                    </a></li>
-                    <li><a class="dropdown-item" href="logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
-                    Sign Out
-                    </a></li>
-                <?php } else { ?>
-                    <li>
+            <?php if(session()->get('name')): ?>
+                <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+                    <li><a class="dropdown-item d-flex align-items-center" href="#" id="dropdownDarkModeToggle">
+                        <i class="fas fa-moon me-2"></i><span>Dark Mode</span></a>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a class="dropdown-item d-flex align-items-center" href="#" id="dropdownFrameToggle">
+                            <i class="fas fa-image me-2"></i><span>Change Frame</span>
+                        </a>
+                        <ul class="dropdown-menu" id="frameSubmenu" style="display:none;">
+                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('gold')"><i class="fas fa-circle text-warning me-2"></i>Gold Frame</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('diamond')"><i class="fas fa-gem text-info me-2"></i>Diamond Frame</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('rainbow')"><i class="fas fa-rainbow text-success me-2"></i>Rainbow Frame</a></li>
+                        </ul>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                <?php endif; ?>
+                <li><a class="dropdown-item" href="/profile/<?= session()->get('name') ?>">
+                    <i class="fas fa-user-circle" aria-hidden="true"></i> Profile
+                </a></li>
+                <li>
+                    <a class="dropdown-item" href="logout">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
+                    </a>
+                </li>
+            <?php else: ?>
+                <li>
                     <a class="dropdown-item" href="login">
-                    <i class="fa fa-sign-in" aria-hidden="true"></i>
-                    Sign In</a></li>
-                <?php } ?>
-            
+                        <i class="fa fa-sign-in" aria-hidden="true"></i> Sign In
+                    </a>
+                </li>
+                
+            <?php endif; ?>
         </ul>
         <?php
             if (session()->get('name')) { // Check if user is logged in
@@ -751,25 +797,25 @@
             <div class="d-grid gap-2">
                 <!-- Baris 1 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="Olahraga" class="badge bg-secondary text-decoration-none">Sport</a>
-                    <a href="Anime" class="badge bg-secondary text-decoration-none">Anime</a>
-                    <a href="Politik" class="badge bg-secondary text-decoration-none">Politic</a>
+                    <a href="<?= base_url('genre/Olahraga')?>" class="badge bg-secondary text-decoration-none">Sport</a>
+                    <a href="<?= base_url('genre/Anime')?>" class="badge bg-secondary text-decoration-none">Anime</a>
+                    <a href="<?= base_url('genre/Politik')?>" class="badge bg-secondary text-decoration-none">Politic</a>
                 </div>
                 <!-- Baris 2 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="Film" class="badge bg-secondary text-decoration-none">Movie</a>
-                    <a href="Berita" class="badge bg-secondary text-decoration-none">News</a>
-                    <a href="Komedi" class="badge bg-secondary text-decoration-none">Comedy</a>
+                    <a href="<?= base_url('genre/Film')?>" class="badge bg-secondary text-decoration-none">Movie</a>
+                    <a href="<?= base_url('genre/Berita')?>" class="badge bg-secondary text-decoration-none">News</a>
+                    <a href="<?= base_url('genre/Komedi')?>" class="badge bg-secondary text-decoration-none">Comedy</a>
                 </div>
                 <!-- Baris 3 -->
                 <div class="d-flex justify-content-between align-item-center">
-                    <a href="Buku" class="badge bg-secondary text-decoration-none">Book</a>
-                    <a href="Otomotif" class="badge bg-secondary text-decoration-none">Automotive</a>
-                    <a href="Teknologi" class="badge bg-secondary text-decoration-none">Technology</a>
+                    <a href="<?= base_url('genre/Buku')?>" class="badge bg-secondary text-decoration-none">Book</a>
+                    <a href="<?= base_url('genre/Otomotif')?>" class="badge bg-secondary text-decoration-none">Automotive</a>
+                    <a href="<?= base_url('genre/Teknologi')?>" class="badge bg-secondary text-decoration-none">Technology</a>
                 </div>
                 <!-- Baris 4 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="Others" class="badge bg-secondary text-decoration-none">Others</a>
+                    <a href="<?= base_url('genre/Others')?>" class="badge bg-secondary text-decoration-none">Others</a>
                 </div>
             </div>
           </div>
@@ -820,27 +866,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+    <!-- DARK MODE TOGGLE SCRIPT -->
 <script>
   (function(){
-    const btn  = document.getElementById('toggleMode');
-    if (!btn) return console.warn('Toggle button not found!');
-    const icon = btn.querySelector('i');
-    const html = document.documentElement;
-
+    const btn  = document.getElementById('toggleMode'),
+          icon = btn.querySelector('i'),
+          html = document.documentElement;
     btn.addEventListener('click', () => {
       const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-bs-theme', next);
       icon.classList.toggle('fa-moon');
       icon.classList.toggle('fa-sun');
-      // kirim pilihan ke server (bila ada endpoint)
-      fetch('<?= base_url("theme/set") ?>', {
+      fetch('<?= base_url('theme/set') ?>', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ theme: next })
-      }).catch(console.error);
+      });
     });
   })();
 </script>
 
 </body>
-</html>.
+</html>

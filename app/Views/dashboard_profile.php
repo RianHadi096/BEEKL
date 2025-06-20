@@ -165,7 +165,7 @@ $userModel = new \App\Models\UserModel();
     .send-comment-btn:hover {
       color: #0056b3;
     }
-    <!-- DARK MODE OVERRIDES -->
+    
 /* background & teks umum */
   html[data-bs-theme="dark"] body {
     background-color: #121212 !important;
@@ -249,12 +249,16 @@ $userModel = new \App\Models\UserModel();
     </style>
 </head>
 <body data-user='<?= json_encode($user ?? []) ?>'>
-  <!-- DARK MODE TOGGLE BUTTON -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
-  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
-  </button>
-</div>
+    <!-- DARK MODE TOGGLE BUTTON -->
+<?php if(session()->get('name')):?>
+    <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+        <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+            <i class="fa fa-moon"></i>
+        </button>
+        </div>
+    <?php endif;?>
+<?php endif;?>
 
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
@@ -272,11 +276,14 @@ $userModel = new \App\Models\UserModel();
       <!-- Search Bar -->
       <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search your thoughts"
-        />
+        <form action="<?= base_url('search')?>" method="post">
+            <input
+            type="text"
+            class="form-control"
+            name="search"
+            placeholder="Search your thoughts"
+            />
+        </form>
       </div>
 
       <!-- Bagian Kanan Header -->
@@ -736,25 +743,25 @@ $userModel = new \App\Models\UserModel();
             <div class="d-grid gap-2">
                 <!-- Baris 1 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Olahraga" class="badge bg-secondary text-decoration-none">Sport</a>
-                    <a href="genre/Anime" class="badge bg-secondary text-decoration-none">Anime</a>
-                    <a href="genre/Politik" class="badge bg-secondary text-decoration-none">Politic</a>
+                    <a href="<?= base_url('genre/Olahraga')?>" class="badge bg-secondary text-decoration-none">Sport</a>
+                    <a href="<?= base_url('genre/Anime')?>" class="badge bg-secondary text-decoration-none">Anime</a>
+                    <a href="<?= base_url('genre/Politik')?>" class="badge bg-secondary text-decoration-none">Politic</a>
                 </div>
                 <!-- Baris 2 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Film" class="badge bg-secondary text-decoration-none">Movie</a>
-                    <a href="genre/Berita" class="badge bg-secondary text-decoration-none">News</a>
-                    <a href="genre/Komedi" class="badge bg-secondary text-decoration-none">Comedy</a>
+                    <a href="<?= base_url('genre/Film')?>" class="badge bg-secondary text-decoration-none">Movie</a>
+                    <a href="<?= base_url('genre/Berita')?>" class="badge bg-secondary text-decoration-none">News</a>
+                    <a href="<?= base_url('genre/Komedi')?>" class="badge bg-secondary text-decoration-none">Comedy</a>
                 </div>
                 <!-- Baris 3 -->
                 <div class="d-flex justify-content-between align-item-center">
-                    <a href="genre/Buku" class="badge bg-secondary text-decoration-none">Book</a>
-                    <a href="genre/Otomotif" class="badge bg-secondary text-decoration-none">Automotive</a>
-                    <a href="genre/Teknologi" class="badge bg-secondary text-decoration-none">Technology</a>
+                    <a href="<?= base_url('genre/Buku')?>" class="badge bg-secondary text-decoration-none">Book</a>
+                    <a href="<?= base_url('genre/Otomotif')?>" class="badge bg-secondary text-decoration-none">Automotive</a>
+                    <a href="<?= base_url('genre/Teknologi')?>" class="badge bg-secondary text-decoration-none">Technology</a>
                 </div>
                 <!-- Baris 4 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Others" class="badge bg-secondary text-decoration-none">Others</a>
+                    <a href="<?= base_url('genre/Others')?>" class="badge bg-secondary text-decoration-none">Others</a>
                 </div>
             </div>
           </div>

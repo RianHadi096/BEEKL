@@ -1,22 +1,28 @@
+<?php
+$userModel = new \App\Models\UserModel();
+?>
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light' ?>">
-
+<html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BEEKL • Search Results</title>
+  <title>BEEKL • Home</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="<?= base_url('css/beeklplus.css') ?>">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/escape-html/1.0.3/escape-html.min.js"></script>
+    <script src="<?= base_url('js/beeklplus.js') ?>"></script>
 
   <style>
-  
+    body {
+      background-color: #f8f9fa; 
+    }
     /* Header */
     header {
       position: sticky;
@@ -166,8 +172,7 @@
     .comment-indentity{
         margin-right: 15px;
     }
-    <!-- DARK MODE OVERRIDES -->
-/* background & teks umum */
+        /* background & teks umum */
   html[data-bs-theme="dark"] body {
     background-color: #121212 !important;
     color: #f5f5f5;
@@ -248,14 +253,18 @@
   }
     </style>
 </head>
-<body>
-  <!-- DARK MODE TOGGLE BUTTON -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
-  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
-  </button>
-</div>
+<body data-user='<?= json_encode($user ?? []) ?>'>
 
+    <!-- DARK MODE TOGGLE BUTTON -->
+<?php if(session()->get('name')):?>
+    <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+        <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+            <i class="fa fa-moon"></i>
+        </button>
+        </div>
+    <?php endif;?>
+<?php endif;?>
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
       <div class="header-logo">
@@ -271,11 +280,11 @@
       <!-- Search Bar -->
       <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <form action="search" method="post">
+        <form action="<?= base_url('search')?>" method="post">
             <input
             type="text"
-            name="search"
             class="form-control"
+            name="search"
             placeholder="Search your thoughts"
             />
         </form>
@@ -283,13 +292,15 @@
 
       <!-- Bagian Kanan Header -->
       <div class="d-flex align-items-center">
-        <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
-            <!-- Removed separate Change Frame dropdown and Dark Mode toggle button -->
-        <?php else: ?>
-            <a href="/beeklplus/pricing" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
-                Try BEEKL+
-            </a>
-        <?php endif; ?>
+        <?php if(session()->get('name')):?>
+            <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+                <!-- Removed separate Change Frame dropdown and Dark Mode toggle button -->
+            <?php else: ?>
+                <a href="/beeklplus/pricing" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
+                    Try BEEKL+
+                </a>
+            <?php endif; ?>
+        <?php endif;?>
         <button
             class="btn btn-outline-secondary dropdown-toggle rounded-pill me-3"
             type="button"
@@ -337,11 +348,6 @@
                     <i class="fas fa-user-circle" aria-hidden="true"></i> Profile
                 </a></li>
                 <li>
-                    <a class="dropdown-item" href="/home">
-                        <i class="fa fa-home" aria-hidden="true"></i> Back to Home
-                    </a>
-                </li>
-                <li>
                     <a class="dropdown-item" href="logout">
                         <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
                     </a>
@@ -352,6 +358,7 @@
                         <i class="fa fa-sign-in" aria-hidden="true"></i> Sign In
                     </a>
                 </li>
+                
             <?php endif; ?>
         </ul>
         <?php
@@ -410,48 +417,7 @@
     </div>
   </header>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Avatar frame selection functionality
-    window.setAvatarFrame = function(frame) {
-        fetch('/beeklplus/set-avatar-frame', {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ frame: frame })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === 'success') {
-                // Update avatar frame class
-                const avatarFrame = document.querySelector('.avatar-frame');
-                avatarFrame.className = 'avatar-frame frame-' + frame;
-            } else {
-                alert(data.message || 'Failed to update avatar frame');
-            }
-        })
-        .catch(() => alert('Failed to update avatar frame'));
-    };
-
-    // Dropdown submenu toggle for Change Frame
-    const dropdownFrameToggle = document.getElementById('dropdownFrameToggle');
-    const frameSubmenu = document.getElementById('frameSubmenu');
-    if (dropdownFrameToggle && frameSubmenu) {
-        dropdownFrameToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (frameSubmenu.style.display === 'none' || frameSubmenu.style.display === '') {
-                frameSubmenu.style.display = 'block';
-            } else {
-                frameSubmenu.style.display = 'none';
-            }
-        });
-    }
-});
-</script>
-
-  <main class="container mt-4">
+<main class="container mt-4">
     <div class="row">
       <!-- Sidebar Kiri -->
       <aside class="col-md-2 mb-4">
@@ -583,8 +549,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <?php foreach ($postforum as $post){ ?>
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title"><?= esc($post['titlePost']) ?></h5>
-                        <p class="card-text"><?= esc($post['content']) ?></p>
+                        <h5 class="card-title"><a href="<?= base_url('post/') ?><?= esc($post['titlePost']) ?>"><?= esc($post['titlePost']) ?></a></h5>
                         <p class="card-text"><small class="text-muted">Genre: <?= esc($post['genre']) ?> | Posted by <?= esc($post['name']) ?> | Posted on: <?= esc($post['created_at']) ?></small></p>
                     </div>
                 </div>
@@ -644,25 +609,25 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="d-grid gap-2">
                 <!-- Baris 1 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Olahraga" class="badge bg-secondary text-decoration-none">Sport</a>
-                    <a href="genre/Anime" class="badge bg-secondary text-decoration-none">Anime</a>
-                    <a href="genre/Politik" class="badge bg-secondary text-decoration-none">Politic</a>
+                    <a href="<?= base_url('genre/Olahraga')?>" class="badge bg-secondary text-decoration-none">Sport</a>
+                    <a href="<?= base_url('genre/Anime')?>" class="badge bg-secondary text-decoration-none">Anime</a>
+                    <a href="<?= base_url('genre/Politik')?>" class="badge bg-secondary text-decoration-none">Politic</a>
                 </div>
                 <!-- Baris 2 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Film" class="badge bg-secondary text-decoration-none">Movie</a>
-                    <a href="genre/Berita" class="badge bg-secondary text-decoration-none">News</a>
-                    <a href="genre/Komedi" class="badge bg-secondary text-decoration-none">Comedy</a>
+                    <a href="<?= base_url('genre/Film')?>" class="badge bg-secondary text-decoration-none">Movie</a>
+                    <a href="<?= base_url('genre/Berita')?>" class="badge bg-secondary text-decoration-none">News</a>
+                    <a href="<?= base_url('genre/Komedi')?>" class="badge bg-secondary text-decoration-none">Comedy</a>
                 </div>
                 <!-- Baris 3 -->
                 <div class="d-flex justify-content-between align-item-center">
-                    <a href="genre/Buku" class="badge bg-secondary text-decoration-none">Book</a>
-                    <a href="genre/Otomotif" class="badge bg-secondary text-decoration-none">Automotive</a>
-                    <a href="genre/Teknologi" class="badge bg-secondary text-decoration-none">Technology</a>
+                    <a href="<?= base_url('genre/Buku')?>" class="badge bg-secondary text-decoration-none">Book</a>
+                    <a href="<?= base_url('genre/Otomotif')?>" class="badge bg-secondary text-decoration-none">Automotive</a>
+                    <a href="<?= base_url('genre/Teknologi')?>" class="badge bg-secondary text-decoration-none">Technology</a>
                 </div>
                 <!-- Baris 4 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Others" class="badge bg-secondary text-decoration-none">Others</a>
+                    <a href="<?= base_url('genre/Others')?>" class="badge bg-secondary text-decoration-none">Others</a>
                 </div>
             </div>
           </div>
@@ -676,7 +641,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <?php if (!empty($trendingWords)): ?>
                         <?php foreach ($trendingWords as $word => $count): ?>
                             <li class="list-group-item d-flex justify-content-between align-items-center text-md-center">
-                                <a href="search/trendings/<?= esc($word)?>"><?= esc($word) ?></a>
+                                <a href="<?= base_url('search/trendings/')?><?= esc($word)?>"><?= esc($word) ?></a>
                             </li>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -689,29 +654,67 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   </main>
 
-  <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const btn  = document.getElementById('toggleMode');
-  const icon = btn.querySelector('i');
-  const html = document.documentElement;
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+  <div id="snackbarToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        Link copied to clipboard!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
 
-  btn.addEventListener('click', () => {
-    const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-bs-theme', next);
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.share-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-post-url');
+            // Copy to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() {
+                    showSnackbar();
+                });
+            } else {
+                // fallback for old browsers
+                const tempInput = document.createElement('input');
+                tempInput.value = url;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showSnackbar();
+            }
+        });
+    });
 
-    icon.classList.toggle('fa-moon');
-    icon.classList.toggle('fa-sun');
-
-    // Kirim pilihan ke server jika perlu
-    fetch('<?= base_url("theme/set") ?>', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ theme: next })
-    }).catch(console.error);
-  });
+    function showSnackbar() {
+        var toastEl = document.getElementById('snackbarToast');
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
 });
 </script>
-
+    <!-- DARK MODE TOGGLE SCRIPT -->
+<script>
+  (function(){
+    const btn  = document.getElementById('toggleMode'),
+          icon = btn.querySelector('i'),
+          html = document.documentElement;
+    btn.addEventListener('click', () => {
+      const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-bs-theme', next);
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+      fetch('<?= base_url('theme/set') ?>', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ theme: next })
+      });
+    });
+  })();
+</script>
 
 </body>
-</html>.
+</html>
