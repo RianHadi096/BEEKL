@@ -288,9 +288,6 @@ $userModel = new \App\Models\UserModel();
 
       <!-- Bagian Kanan Header -->
       <div class="d-flex align-items-center">
-            <!-- Removed separate Change Frame dropdown and Dark Mode toggle button -->
-        <?php else: ?>
-            </a>
         <button
             class="btn btn-outline-secondary dropdown-toggle rounded-pill me-3"
             type="button"
