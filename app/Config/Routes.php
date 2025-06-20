@@ -14,6 +14,8 @@ $routes->get('check-migration', 'CheckMigration::index');
 
 //GET DATA IN ROUTES FROM THEIR CONTROLLERS
     $routes->get('/home', 'Home::index');
+    //or
+    $routes->get('/', 'Home::index');
     //$routes->get('/dashboard', 'Dashboard::index',['filter' => 'auth']);
 //Login
     $routes->get('/login', 'Login::index');
@@ -52,7 +54,7 @@ $routes->get('check-migration', 'CheckMigration::index');
 //Notifications
     $routes->get('/notifications', 'Notifications::index');
     //$routes->get('/notifications/markAsRead/(:num)', 'Notifications::markAsRead/$1');
-    //$routes->get('/notifications/delete/(:num)', 'Notifications::delete/$1');
+    $routes->get('/notifications/delete/(:num)', 'Notifications::delete/$1');
 
 //View the post
     $routes->get('/post/(:segment)', 'Home::viewPost/$1');

@@ -34,24 +34,27 @@ class Comment extends BaseController
         $commentCount = $commentModel->where('postID', $id)->countAllResults();
         $postModel->update($id, ['comments' => $commentCount]);
 
-        //create a notification message to another user
-        $userModel = new UserModel();
-        $data['userID'] = $userModel->where('id', $userID)->first();
-        $name = $data['userID']['name'];
+        
+        // Create notification for successful comment addition
         $notificationModel = new NotificationModel();
-        $data = [
-            'userID' => $userID,
-            'type' => 'comment',
-            'message' => $name.' commented on your post',
-            'isRead' => 0,
-            'created_at' => date('Y-m-d H:i:s'),
-        ];
-        $notificationModel->insert($data);
 
-        //return to the home page
+        // Get post owner's userID
+        $postOwner = $postModel->find($id);
+        $postOwnerUserID = $postOwner['userID'] ?? null;
+
+        if ($postOwnerUserID && $postOwnerUserID != $userID) {
+            $notificationData = [
+                'userID' => $postOwnerUserID,
+                'type' => 'comment',
+                'message' => 'A new comment has been added to your post with title: ' . $postOwner['titlePost'],
+                'isRead' => 0, // Set notification as unread
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+            $notificationModel->insert($notificationData);
+        }
+
         return redirect()->to('/home')->with('success', 'Comment Added Successfully');
 
-        
     }
     //delete comment at home page
     public function deleteComment_atHomePage($commentID=null){
@@ -98,19 +101,23 @@ public function addComment($id=null){
     $commentCount = $commentModel->where('postID', $id)->countAllResults();
     $postModel->update($id, ['comments' => $commentCount]);
 
-    //create message from notifications table
-    $userModel = new UserModel();
-    $data['userID'] = $userModel->where('id', $userID)->first();
-    $name = $data['userID']['name'];
-    $notificationModel = new NotificationModel();
-    $data = [
-        'userID' => $userID,
-        'type' => 'comment',
-        'message' => $name.' commented on your post',
-        'isRead' => 0,
-        'created_at' => date('Y-m-d H:i:s'),
-    ];
-    $notificationModel->insert($data);
+    // Create notification for successful comment addition
+        $notificationModel = new NotificationModel();
+
+        // Get post owner's userID
+        $postOwner = $postModel->find($id);
+        $postOwnerUserID = $postOwner['userID'] ?? null;
+
+        if ($postOwnerUserID && $postOwnerUserID != $userID) {
+            $notificationData = [
+                'userID' => $postOwnerUserID,
+                'type' => 'comment',
+                'message' => 'A new comment has been added to your post with title: ' . $postOwner['titlePost'],
+                'isRead' => 0, // Set notification as unread
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+            $notificationModel->insert($notificationData);
+        }
 
     //return to the profile page with $name
     $session = session();
