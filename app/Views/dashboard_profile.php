@@ -315,9 +315,6 @@ $userModel = new \App\Models\UserModel();
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
             <?php if(session()->get('name')): ?>
                 <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
-                    <li><a class="dropdown-item d-flex align-items-center" href="#" id="dropdownDarkModeToggle">
-                        <i class="fas fa-moon me-2"></i><span>Dark Mode</span></a>
-                    </li>
                     <li class="dropdown-submenu">
                         <a class="dropdown-item d-flex align-items-center" href="#" id="dropdownFrameToggle">
                             <i class="fas fa-image me-2"></i><span>Change Frame</span>
