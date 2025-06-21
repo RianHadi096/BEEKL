@@ -503,8 +503,8 @@ $userModel = new \App\Models\UserModel();
                             </div>
                             <div data-mdb-input-init class="form-outline w-100">
                                 <label for="">Content</label>
-                                <textarea class="form-control mb-3" name='content' id="textAreaExample" rows="4"
-                                style="background: #fff;" placeholder="Tell me your Stories...."></textarea>
+                                <textarea class="form-control mb-3" name="content" id="textAreaExample" rows="4"
+                                  placeholder="Tell me your Stories...."></textarea>
                             </div>
                                
                         </div>

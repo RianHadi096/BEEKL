@@ -342,17 +342,17 @@ $userModel = new \App\Models\UserModel();
                         </li>
                         <li><hr class="dropdown-divider"></li>
                     <?php endif; ?>
-                    <li><a class="dropdown-item" href="/profile/<?= session()->get('name') ?>">
+                    <li><a class="dropdown-item" href="<?= base_url('profile/')?><?= session()->get('name') ?>">
                         <i class="fas fa-user-circle" aria-hidden="true"></i> Profile
                     </a></li>
                     <li>
-                        <a class="dropdown-item" href="logout">
+                        <a class="dropdown-item" href="<?= base_url('logout')?>">
                             <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
                         </a>
                     </li>
                 <?php else: ?>
                     <li>
-                        <a class="dropdown-item" href="login">
+                        <a class="dropdown-item" href="<?= base_url('login')?>">
                             <i class="fa fa-sign-in" aria-hidden="true"></i> Sign In
                         </a>
                     </li>
