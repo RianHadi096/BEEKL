@@ -169,7 +169,6 @@
         <div class="price">Rp 9.999 <span style="font-size: 1rem; color: #666">/month</span></div>
 
         <ul class="features-list">
-            <li>Dark Mode for Comfortable Viewing</li>
             <li>Exclusive Avatar Frames (Gold, Diamond, Rainbow)</li>
             <li>Priority Support Access</li>
             <li>Ad-Free Experience</li>
