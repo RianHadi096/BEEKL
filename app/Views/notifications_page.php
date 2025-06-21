@@ -216,11 +216,14 @@ html[data-bs-theme="dark"] .btn-outline-secondary:hover {
       <!-- Search Bar -->
       <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search your thoughts"
-        />
+        <form action="<?= base_url('search')?>" method="post">
+            <input
+            type="text"
+            class="form-control"
+            name="search"
+            placeholder="Search your thoughts"
+            />
+        </form>
       </div>
 
       <!-- Bagian Kanan Header -->

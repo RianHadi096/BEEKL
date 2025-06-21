@@ -120,6 +120,15 @@ class Home extends BaseController
                                     ->where('userID', $userID)
                                     ->findAll();
 
+        $userModel = new UserModel();
+        $session = session();
+        $userID = session()->get('id');
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
+        $data['user'] = $user;
+
         //translating genre to english
         $data['postforum'] = array_map(function($post) {
             switch ($post['genre']) {
@@ -175,6 +184,16 @@ class Home extends BaseController
         if ($session->has('id')) {
             $user = $userModel->find($session->get('id'));
         }
+
+        $userModel = new UserModel();
+        $session = session();
+        $userID = session()->get('id');
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
+        $data['user'] = $user;
+
         //get all data from postforum with userID
         $data['postforum'] = $model
             ->join('users', 'users.id = postforum.userID')
@@ -221,6 +240,7 @@ class Home extends BaseController
             ->join('comments', 'comments.postID = postforum.postID', 'left')
             ->groupBy('postforum.postID')
             ->findAll();
+
         return view('view_post',$data);
     }
 }

@@ -17,6 +17,16 @@ class Notifications extends BaseController
         
         //mark notifications as read
         $notificationModel->where('userID', $userID)->set(['isRead' => 1])->update();
+
+        $userModel = new UserModel();
+        $session = session();
+        $userID = session()->get('id');
+        $user = null;
+        if ($session->has('id')) {
+            $user = $userModel->find($session->get('id'));
+        }
+        $data['user'] = $user;
+
         return view('notifications_page', $data);
     }
 
