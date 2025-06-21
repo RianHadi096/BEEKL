@@ -1,19 +1,24 @@
+<?php
+$userModel = new \App\Models\UserModel();
+?>
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light' ?>">
-
+<html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BEEKL • <?= $_SESSION['name']?></title>
+  <title>BEEKL • Home</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+  <link rel="stylesheet" href="<?= base_url('css/beeklplus.css') ?>">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/escape-html/1.0.3/escape-html.min.js"></script>
- 
+    <script src="<?= base_url('js/beeklplus.js') ?>"></script>
+
   <style>
     body {
       background-color: #f8f9fa; 
@@ -164,46 +169,104 @@
     .send-comment-btn:hover {
       color: #0056b3;
     }
-    /* Override simple untuk dark mode */
-html[data-bs-theme="dark"] body {
-  background: #121212 !important;
-  color: #e1e1e1 !important;
-}
-html[data-bs-theme="dark"] header {
-  background: #1e1e1e !important;
-  border-color: #333 !important;
-}
-html[data-bs-theme="dark"] .card,
-html[data-bs-theme="dark"] .card-body {
-  background: #1e1e1e !important;
-  color: #e1e1e1 !important;
-  border-color: #333 !important;
-}
-html[data-bs-theme="dark"] .list-group-item {
-  background: #1e1e1e !important;
-  color: #e1e1e1 !important;
-}
-html[data-bs-theme="dark"] .btn-outline-secondary {
-  border-color: #555;
-  color: #e1e1e1;
-}
-html[data-bs-theme="dark"] .btn-outline-secondary:hover {
-  background: #333;
-  color: #fff;
-}
-
+    .comment-indentity{
+        margin-right: 15px;
+    }
+        /* background & teks umum */
+  html[data-bs-theme="dark"] body {
+    background-color: #121212 !important;
+    color: #f5f5f5;
+  }
+  /* header */
+  html[data-bs-theme="dark"] header {
+    background-color: #1e1e1e !important;
+    border-bottom-color: #333 !important;
+  }
+  html[data-bs-theme="dark"] .header-logo,
+  html[data-bs-theme="dark"] .btn-outline-secondary,
+  html[data-bs-theme="dark"] .dropdown-toggle {
+    color: #f5f5f5 !important;
+    border-color: #444 !important;
+  }
+  /* search input */
+  html[data-bs-theme="dark"] .search-wrapper input {
+    background-color: #2c2c2c !important;
+    color: #f5f5f5 !important;
+    border-color: #444 !important;
+  }
+  /* sidebar kiri & kanan */
+  html[data-bs-theme="dark"] aside .card,
+  html[data-bs-theme="dark"] .card-left {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+  }
+  html[data-bs-theme="dark"] .nav-link,
+  html[data-bs-theme="dark"] .btn-outline-black {
+    color: #f5f5f5 !important;
+    border-color: #444 !important;
+  }
+  /* konten tengah (post cards) */
+  html[data-bs-theme="dark"] .card {
+    background-color: #2a2a2a !important;
+    border-color: #444 !important;
+  }
+  html[data-bs-theme="dark"] .card-body,
+  html[data-bs-theme="dark"] .post-actions i,
+  html[data-bs-theme="dark"] .text-muted {
+    color: #e0e0e0 !important;
+  }
+  /* tombol */
+  html[data-bs-theme="dark"] .btn-primary,
+  html[data-bs-theme="dark"] .btn-follow {
+    background-color: #ff4d00 !important;
+    border-color: #ff4d00 !important;
+    color: #fff !important;
+  }
+  html[data-bs-theme="dark"] .btn-secondary,
+  html[data-bs-theme="dark"] .btn-outline-secondary {
+    background-color: #2c2c2c !important;
+    border-color: #444 !important;
+    color: #f5f5f5 !important;
+  }
+  /* dropdown menu & modal */
+  html[data-bs-theme="dark"] .dropdown-menu,
+  html[data-bs-theme="dark"] .modal-content {
+    background-color: #2c2c2c !important;
+    color: #f5f5f5 !important;
+  }
+  /* comment input */
+  html[data-bs-theme="dark"] .comment-input {
+    background-color: #1e1e1e !important;
+    color: #f5f5f5 !important;
+    border-color: #444 !important;
+  }
+  /* checkbox label, badge, link */
+  html[data-bs-theme="dark"] .checkbox label,
+  html[data-bs-theme="dark"] .badge,
+  html[data-bs-theme="dark"] a.text-decoration-none {
+    color: #f5f5f5 !important;
+  }
+  /* toast */
+  html[data-bs-theme="dark"] .toast {
+    background-color: #2c2c2c !important;
+    color: #f5f5f5 !important;
+  }
     </style>
 </head>
-<body>
-  <!-- DARK MODE TOGGLE BUTTON -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
-  <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-moon"></i>
-  </button>
-</div>
+<body data-user='<?= json_encode($user ?? []) ?>'>
+
+    <!-- DARK MODE TOGGLE BUTTON -->
+<?php if(session()->get('name')):?>
+    <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1500;">
+        <button id="toggleMode" class="btn btn-sm btn-outline-secondary">
+            <i class="fa fa-moon"></i>
+        </button>
+        </div>
+    <?php endif;?>
+<?php endif;?>
   <header>
     <div class="container header-container d-flex justify-content-between align-items-center">
-      
       <div class="header-logo">
             <a href="/">
                 <img
@@ -213,6 +276,7 @@ html[data-bs-theme="dark"] .btn-outline-secondary:hover {
                 />
             </a>
         </div>
+
       <!-- Search Bar -->
       <div class="search-wrapper">
         <i class="fas fa-search"></i>
@@ -228,9 +292,16 @@ html[data-bs-theme="dark"] .btn-outline-secondary:hover {
 
       <!-- Bagian Kanan Header -->
       <div class="d-flex align-items-center">
-        <button class="btn btn-outline-secondary rounded-pill me-3">
-          Try BEEKL+
-        </button>
+        <?php if(session()->get('name')):?>
+            <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+                <!-- Removed separate Change Frame dropdown and Dark Mode toggle button -->
+            <?php else: ?>
+                <a href="/beeklplus/pricing" class="btn btn-outline-secondary rounded-pill me-3" role="button" style="cursor:pointer; text-decoration:none; display:inline-block;">
+                    Try BEEKL+
+                </a>
+            <?php endif; ?>
+        <?php endif;?>
+        
         <button
             class="btn btn-outline-secondary dropdown-toggle rounded-pill me-3"
             type="button"
@@ -238,11 +309,16 @@ html[data-bs-theme="dark"] .btn-outline-secondary:hover {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-            alt="User avatar"
-            class="rounded-circle"
-            width="40"
-            height="40"/>
+            <div class="avatar-frame <?= isset($_SESSION['avatar_frame']) ? 'frame-'.$_SESSION['avatar_frame'] : '' ?>">
+                <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                alt="User avatar"
+                class="rounded-circle"
+                width="40"
+                height="40"/>
+                <?php if(isset($_SESSION['is_premium']) && $_SESSION['is_premium']): ?>
+                    <span class="premium-badge">+</span>
+                <?php endif; ?>
+            </div>
             <?php
                 if(session()->get('name')) {
                     echo session()->get('name');
@@ -252,23 +328,36 @@ html[data-bs-theme="dark"] .btn-outline-secondary:hover {
             ?>
           </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-            <?php
-                if(session()->get('name')) {
-                    echo '<li><a class="dropdown-item" href="/home">
-                    <i class="fa fa-home" aria-hidden="true"></i>
-                    Back to Home
-                    </a></li>';
-                    echo '<li><a class="dropdown-item" href="logout">
-                    <i class="fa fa-sign-out" aria-hidden="true"></i>
-                    Sign Out
-                    </a></li>';
-                } else {
-                    echo '<li>
-                    <a class="dropdown-item" href="login">
-                    <i class="fa fa-sign-in" aria-hidden="true"></i>
-                    Sign In</a></li>';
-                }
-            ?>
+                <?php if(session()->get('name')): ?>
+                    <?php if(isset($user['is_premium']) && $user['is_premium']): ?>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item d-flex align-items-center" href="#" id="dropdownFrameToggle">
+                                <i class="fas fa-image me-2"></i><span>Change Frame</span>
+                            </a>
+                            <ul class="dropdown-menu" id="frameSubmenu" style="display:none;">
+                                <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('gold')"><i class="fas fa-circle text-warning me-2"></i>Gold Frame</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('diamond')"><i class="fas fa-gem text-info me-2"></i>Diamond Frame</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setAvatarFrame('rainbow')"><i class="fas fa-rainbow text-success me-2"></i>Rainbow Frame</a></li>
+                            </ul>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                    <?php endif; ?>
+                    <li><a class="dropdown-item" href="/profile/<?= session()->get('name') ?>">
+                        <i class="fas fa-user-circle" aria-hidden="true"></i> Profile
+                    </a></li>
+                    <li>
+                        <a class="dropdown-item" href="logout">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li>
+                        <a class="dropdown-item" href="login">
+                            <i class="fa fa-sign-in" aria-hidden="true"></i> Sign In
+                        </a>
+                    </li>
+                    
+                <?php endif; ?>
         </ul>
         <?php
             if (session()->get('name')) { // Check if user is logged in
@@ -325,8 +414,7 @@ html[data-bs-theme="dark"] .btn-outline-secondary:hover {
       </div>
     </div>
   </header>
-
-  <main class="container mt-4">
+<main class="container mt-4">
     <div class="row">
       <!-- Sidebar Kiri -->
       <aside class="col-md-2 mb-4">
@@ -505,25 +593,25 @@ html[data-bs-theme="dark"] .btn-outline-secondary:hover {
             <div class="d-grid gap-2">
                 <!-- Baris 1 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Olahraga" class="badge bg-secondary text-decoration-none">Sport</a>
-                    <a href="genre/Anime" class="badge bg-secondary text-decoration-none">Anime</a>
-                    <a href="genre/Politik" class="badge bg-secondary text-decoration-none">Politic</a>
+                    <a href="<?= base_url('genre/Olahraga')?>" class="badge bg-secondary text-decoration-none">Sport</a>
+                    <a href="<?= base_url('genre/Anime')?>" class="badge bg-secondary text-decoration-none">Anime</a>
+                    <a href="<?= base_url('genre/Politik')?>" class="badge bg-secondary text-decoration-none">Politic</a>
                 </div>
                 <!-- Baris 2 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Film" class="badge bg-secondary text-decoration-none">Movie</a>
-                    <a href="genre/Berita" class="badge bg-secondary text-decoration-none">News</a>
-                    <a href="genre/Komedi" class="badge bg-secondary text-decoration-none">Comedy</a>
+                    <a href="<?= base_url('genre/Film')?>" class="badge bg-secondary text-decoration-none">Movie</a>
+                    <a href="<?= base_url('genre/Berita')?>" class="badge bg-secondary text-decoration-none">News</a>
+                    <a href="<?= base_url('genre/Komedi')?>" class="badge bg-secondary text-decoration-none">Comedy</a>
                 </div>
                 <!-- Baris 3 -->
                 <div class="d-flex justify-content-between align-item-center">
-                    <a href="genre/Buku" class="badge bg-secondary text-decoration-none">Book</a>
-                    <a href="genre/Otomotif" class="badge bg-secondary text-decoration-none">Automotive</a>
-                    <a href="genre/Teknologi" class="badge bg-secondary text-decoration-none">Technology</a>
+                    <a href="<?= base_url('genre/Buku')?>" class="badge bg-secondary text-decoration-none">Book</a>
+                    <a href="<?= base_url('genre/Otomotif')?>" class="badge bg-secondary text-decoration-none">Automotive</a>
+                    <a href="<?= base_url('genre/Teknologi')?>" class="badge bg-secondary text-decoration-none">Technology</a>
                 </div>
                 <!-- Baris 4 -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="genre/Others" class="badge bg-secondary text-decoration-none">Others</a>
+                    <a href="<?= base_url('genre/Others')?>" class="badge bg-secondary text-decoration-none">Others</a>
                 </div>
             </div>
           </div>
@@ -531,14 +619,6 @@ html[data-bs-theme="dark"] .btn-outline-secondary:hover {
       </aside>
     </div>
   </main>
-
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-  ></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-  ></script>
 
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
   <div id="snackbarToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -582,26 +662,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-      <!-- DARK MODE TOGGLE SCRIPT -->
+    <!-- DARK MODE TOGGLE SCRIPT -->
 <script>
-;(function(){
-  const btn  = document.getElementById('toggleMode'),
-        icon = btn.querySelector('i'),
-        html = document.documentElement;
-  btn.addEventListener('click', () => {
-    const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-bs-theme', next);
-    icon.classList.toggle('fa-moon');
-    icon.classList.toggle('fa-sun');
-    fetch('<?= base_url('theme/set') ?>', {
-      method: 'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ theme: next })
+  (function(){
+    const btn  = document.getElementById('toggleMode'),
+          icon = btn.querySelector('i'),
+          html = document.documentElement;
+    btn.addEventListener('click', () => {
+      const next = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-bs-theme', next);
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+      fetch('<?= base_url('theme/set') ?>', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ theme: next })
+      });
     });
-  });
-})();
+  })();
 </script>
 
-
 </body>
-</html>.
+</html>
