@@ -67,6 +67,12 @@ body.dark-mode .modal-content {
     background-color: #2d2d2d !important;
     border-color: #404040 !important;
 }
+/*form-control-dark-mode*/
+body.dark-mode .form-control {
+    background-color: #404040 !important;
+    color: #e0e0e0 !important;
+    border-color: #505050 !important;
+}
 
 body.dark-mode .modal-header,
 body.dark-mode .modal-footer {
