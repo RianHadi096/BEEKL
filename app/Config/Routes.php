@@ -87,3 +87,6 @@ $routes->group('beeklplus', function($routes) {
     $routes->get('upgrade', 'BeeklPlus::upgradeToPremium');
     $routes->get('pricing', 'BeeklPlus::pricing');
 });
+
+// Profile features
+$routes->post('profile/change-avatar', 'ProfileController::changeAvatar', ['filter' => 'auth']);
