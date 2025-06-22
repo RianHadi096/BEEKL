@@ -30,10 +30,16 @@ class Login extends BaseController
         $user = $model->where('email', $encryptedEmail)->orWhere('name', $login_user)->first();
 
         if ($user && password_verify($password, $user['password'])) {
+            // The $user['avatar'] is already a full URL thanks to the UserModel's afterFind callback.
             $session->set([
-                'id' => $user['id'],
-                'name' => $user['name'],
-                'logged_in' => true
+                'id'            => $user['id'],
+                'name'          => $user['name'],
+                'logged_in'     => true,
+                'avatar'        => $user['avatar'], // Load avatar from database
+                'is_premium'    => $user['is_premium'] ?? 0,
+                'dark_mode'     => $user['dark_mode'] ?? 0,
+                'avatar_frame'  => $user['avatar_frame'] ?? 'default',
+                'theme'         => $user['theme'] ?? 'light', // Assuming you add a 'theme' column
             ]);
             return redirect()->to('/home');
         } else {
