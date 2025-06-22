@@ -1,5 +1,6 @@
 <?php
 $userModel = new \App\Models\UserModel();
+$defaultAvatar = 'https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg';
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
@@ -309,7 +310,7 @@ $userModel = new \App\Models\UserModel();
             aria-expanded="false"
           >
             <div class="avatar-frame <?= isset($_SESSION['avatar_frame']) ? 'frame-'.$_SESSION['avatar_frame'] : '' ?>">
-                <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                <img src="<?= session()->get('avatar') ?? $defaultAvatar ?>"
                 alt="User avatar"
                 class="rounded-circle"
                 width="40"
@@ -561,12 +562,13 @@ $userModel = new \App\Models\UserModel();
                    <div class="card-body">
                        <div class="d-flex justify-content-between align-items-center mb-3">
                            <div class="d-flex align-items-center">
-                               <img
-                               src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-                               class="rounded-circle me-2"
-                               width="40"
-                               height="40"
-                               />
+                               <?php
+                                   $postUser = $userModel->find($post['userID']);
+                                   $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && !empty($postUser['avatar_frame']);
+                               ?>
+                               <div class="<?= $hasFrame ? 'avatar-frame frame-'.$postUser['avatar_frame'] : '' ?> me-2">
+                                   <img src="<?= $postUser['avatar'] ?>" class="rounded-circle" width="40" height="40" alt="<?= esc($postUser['name']) ?>'s avatar"/>
+                               </div>
                                <div>
                                    <div class="fw-bold">
                                        <a class="text-decoration-none text-dark" href="/post/<?= $post['titlePost']?>"> <?= $post['titlePost']?> </a></br>
@@ -637,12 +639,13 @@ $userModel = new \App\Models\UserModel();
                    <div class="card-body">
                        <div class="d-flex justify-content-between align-items-center mb-3">
                            <div class="d-flex align-items-center">
-                               <img
-                               src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
-                               class="rounded-circle me-2"
-                               width="40"
-                               height="40"
-                               />
+                               <?php
+                                   $postUser = $userModel->find($post['userID']);
+                                   $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && !empty($postUser['avatar_frame']);
+                               ?>
+                               <div class="<?= $hasFrame ? 'avatar-frame frame-'.$postUser['avatar_frame'] : '' ?> me-2">
+                                   <img src="<?= $postUser['avatar'] ?>" class="rounded-circle" width="40" height="40" alt="<?= esc($postUser['name']) ?>'s avatar"/>
+                               </div>
                                <div>
                                    <div class="fw-bold">
                                    <a class="text-decoration-none text-dark" href="/post/<?= $post['titlePost']?>"> <?= $post['titlePost']?> </a></br>
@@ -729,14 +732,12 @@ $userModel = new \App\Models\UserModel();
                                             } else {
                                                 echo '<div class="comment-list">';
                                                 foreach($comments as $comment) {
-                                                    //get user data
-                                                    $userModel = new \App\Models\UserModel();
-                                                    $user = $userModel->find($comment['userID']);
+                                                    $commentUser = $userModel->find($comment['userID']);
                                                     ?>
                                                     <div class="comment-item">
-                                                        <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" alt="User Avatar" class="comment-avatar">
+                                                        <img src="<?= $commentUser['avatar'] ?>" alt="<?= esc($commentUser['name']) ?>'s Avatar" class="comment-avatar">
                                                         <div class="comment-content">
-                                                            <div class="comment-author"><?php echo $user['name'] ?></div>
+                                                            <div class="comment-author"><?php echo $commentUser['name'] ?></div>
                                                             <div class="comment-text"><?php echo $comment['content'] ?></div>
                                                             <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
                                                         

@@ -1,5 +1,6 @@
 <?php
 $userModel = new \App\Models\UserModel();
+$defaultAvatar = 'https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg';
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
@@ -310,7 +311,7 @@ $userModel = new \App\Models\UserModel();
             aria-expanded="false"
           >
             <div class="avatar-frame <?= isset($_SESSION['avatar_frame']) ? 'frame-'.$_SESSION['avatar_frame'] : '' ?>">
-                <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                <img src="<?= session()->get('avatar') ?? $defaultAvatar ?>"
                 alt="User avatar"
                 class="rounded-circle"
                 width="40"
@@ -562,11 +563,10 @@ $userModel = new \App\Models\UserModel();
                            <div class="d-flex align-items-center">
                                <?php
                                     $postUser = $userModel->find($post['userID']);
-                                    $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && isset($postUser['avatar_frame']);
+                                    $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && !empty($postUser['avatar_frame']);
                                 ?>
                                <div class="<?= $hasFrame ? 'avatar-frame frame-'.$postUser['avatar_frame'] : '' ?> me-2">
-                                    <img
-                                    src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                                    <img src="<?= $postUser['avatar'] // URL diproses oleh Model Callback ?>"
                                     class="rounded-circle"
                                     width="40"
                                     height="40"
@@ -698,11 +698,10 @@ class="share-btn text-decoration-none text-dark"
                            <div class="d-flex align-items-center">
                                <?php
                                     $postUser = $userModel->find($post['userID']);
-                                    $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && isset($postUser['avatar_frame']);
+                                    $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && !empty($postUser['avatar_frame']);
                                 ?>
                                <div class="<?= $hasFrame ? 'avatar-frame frame-'.$postUser['avatar_frame'] : '' ?> me-2">
-                                    <img
-                                    src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                                    <img src="<?= $postUser['avatar'] // URL diproses oleh Model Callback ?>"
                                     class="rounded-circle"
                                     width="40"
                                     height="40"
@@ -799,12 +798,11 @@ class="share-btn text-decoration-none text-dark"
                                             } else {
                                                 echo '<div class="comment-list">';
                                                 foreach($comments as $comment) {
-                                                    //get user data
-                                                    $userModel = new \App\Models\UserModel();
-                                                    $user = $userModel->find($comment['userID']);
+                                                    // Gunakan model yang sudah di-instance di atas
+                                                    $commentUser = $userModel->find($comment['userID']);
                                                     ?>
                                                     <div class="comment-item">
-                                                        <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" alt="User Avatar" class="comment-avatar">
+                                                        <img src="<?= $commentUser['avatar'] ?>" alt="<?= esc($commentUser['name']) ?>'s Avatar" class="comment-avatar">
                                                         <div class="comment-content">
                                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                                 <div class="d-flex align-items-center">

@@ -1,5 +1,6 @@
 <?php
 $userModel = new \App\Models\UserModel();
+$defaultAvatar = 'https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg';
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="<?= session()->get('theme') ?? 'light'; ?>">
@@ -301,8 +302,8 @@ $userModel = new \App\Models\UserModel();
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <div class="avatar-frame <?= isset($_SESSION['avatar_frame']) ? 'frame-'.$_SESSION['avatar_frame'] : '' ?>">
-                <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+            <div class="avatar-frame <?= (isset($_SESSION['avatar_frame']) && $_SESSION['avatar_frame']) ? 'frame-'.$_SESSION['avatar_frame'] : '' ?>">
+                <img src="<?= session()->get('avatar') ?? $defaultAvatar ?>"
                 alt="User avatar"
                 class="rounded-circle"
                 width="40"
@@ -334,6 +335,11 @@ $userModel = new \App\Models\UserModel();
                     </li>
                     <li><hr class="dropdown-divider"></li>
                 <?php endif; ?>
+                <li>
+                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#changeProfilePictureModal">
+                        <i class="fa fa-user-circle me-2" aria-hidden="true"></i> Change Profile Picture
+                    </a>
+                </li>
                 <li>
                     <a class="dropdown-item" href="/home">
                         <i class="fa fa-home" aria-hidden="true"></i> Back to Home
@@ -566,11 +572,10 @@ $userModel = new \App\Models\UserModel();
                                     <div class="d-flex align-items-center">
                                         <?php
                                             $postUser = $userModel->find($post['userID']);
-                                            $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && isset($postUser['avatar_frame']);
+                                            $hasFrame = isset($postUser['is_premium']) && $postUser['is_premium'] && !empty($postUser['avatar_frame']);
                                         ?>
                                         <div class="<?= $hasFrame ? 'avatar-frame frame-'.$postUser['avatar_frame'] : '' ?> me-2">
-                                            <img
-                                            src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg"
+                                            <img src="<?= $postUser['avatar'] ?>"
                                             class="rounded-circle"
                                             width="40"
                                             height="40"
@@ -664,14 +669,13 @@ $userModel = new \App\Models\UserModel();
                                             } else {
                                                 echo '<div class="comment-list">';
                                                 foreach($comments as $comment) {
-                                                    //get user data
-                                                    $userModel = new \App\Models\UserModel();
-                                                    $user = $userModel->find($comment['userID']);
+                                                    // Get user data. The model will automatically handle the avatar URL. Use the model instantiated above.
+                                                    $commentUser = $userModel->find($comment['userID']);
                                                     ?>
                                                     <div class="comment-item">
-                                                        <img src="https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLsLZJffEaEfpf09u-jKt82wBc.jpg" alt="User Avatar" class="comment-avatar">
+                                                        <img src="<?= $commentUser['avatar'] ?>" alt="<?= esc($commentUser['name']) ?>'s Avatar" class="comment-avatar">
                                                         <div class="comment-content">
-                                                            <div class="comment-author"><?php echo $user['name'] ?></div>
+                                                            <div class="comment-author"><?php echo $commentUser['name'] ?></div>
                                                             <div class="comment-text"><?php echo $comment['content'] ?></div>
                                                             <div class="comment-time text-muted"><?php echo date('d-m-Y H:i', strtotime($comment['created_at'])) ?></div>
                                                         
@@ -767,6 +771,33 @@ $userModel = new \App\Models\UserModel();
     </div>
   </main>
 
+  <!-- Modal Ganti Foto Profil -->
+    <div class="modal fade" id="changeProfilePictureModal" tabindex="-1" aria-labelledby="changeProfilePictureModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="<?= base_url('profile/change-avatar') ?>" method="post" enctype="multipart/form-data">
+                    <?= csrf_field() ?>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changeProfilePictureModalLabel">Change Profile Picture</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center mb-3">
+                            <img id="imagePreview" src="<?= session()->get('avatar') ?? $defaultAvatar ?>" alt="Image Preview" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="profilePictureInput" class="form-label">Choose new picture (.jpg, .jpeg, .png, max 2MB)</label>
+                            <input class="form-control" type="file" id="profilePictureInput" name="avatar" accept="image/png, image/jpeg, image/jpg" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
   <script
     src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
@@ -819,28 +850,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Dark mode toggle functionality
-    document.getElementById('darkModeToggle').addEventListener('click', function() {
-        fetch('/beeklplus/toggle-dark-mode', {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === 'success') {
-                if(data.dark_mode) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.remove('dark-mode');
+    const darkModeToggle = document.getElementById('toggleMode');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', function() {
+            fetch('/beeklplus/toggle-dark-mode', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
                 }
-            } else {
-                alert(data.message || 'Failed to toggle dark mode');
-            }
-        })
-        .catch(() => alert('Failed to toggle dark mode'));
-    });
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    // The theme is now handled by data-bs-theme, so this part might be redundant
+                    // depending on how the backend is implemented.
+                } else {
+                    console.error(data.message || 'Failed to toggle dark mode');
+                }
+            })
+            .catch(() => console.error('Failed to toggle dark mode'));
+        });
+    }
 
     // Avatar frame selection functionality
     window.setAvatarFrame = function(frame) {
@@ -875,6 +906,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 frameSubmenu.style.display = 'block';
             } else {
                 frameSubmenu.style.display = 'none';
+            }
+        });
+    }
+
+    // Image preview for profile picture change
+    const profilePictureInput = document.getElementById('profilePictureInput');
+    const imagePreview = document.getElementById('imagePreview');
+    if (profilePictureInput && imagePreview) {
+        profilePictureInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
             }
         });
     }
