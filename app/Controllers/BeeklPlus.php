@@ -42,6 +42,9 @@ class BeeklPlus extends BaseController
         $darkMode = !$user['dark_mode'];
         $this->userModel->update($session->get('id'), ['dark_mode' => $darkMode]);
 
+        // Update session immediately
+        $session->set('dark_mode', $darkMode);
+
         return $this->response->setJSON([
             'status' => 'success',
             'dark_mode' => $darkMode
@@ -66,6 +69,9 @@ class BeeklPlus extends BaseController
 
         $session = session();
         $this->userModel->update($session->get('id'), ['avatar_frame' => $frame]);
+
+        // Update session immediately
+        $session->set('avatar_frame', $frame);
 
         return $this->response->setJSON([
             'status' => 'success',
