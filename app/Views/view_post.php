@@ -810,6 +810,14 @@ $defaultAvatar = 'https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLs
                                     <i class="fas fa-share me-1"></i>
                                 </a>
                             </div>
+                            <div class="me-3">
+                                <a href="javascript:void(0)" 
+                                class="save-btn text-decoration-none text-dark" 
+                                data-post-id="<?= $post['postID'] ?>"
+                                title="Save this post">
+                                    <i class="fa fa-bookmark me-1"></i>
+                                </a>
+                            </div>
                        </div>
                        <!-- Comment form -->
                         <form action="/addComment_atHomePage/<?php echo $post['postID'] ?>" method="post">
@@ -955,6 +963,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })();
 </script>
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.save-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const postID = this.getAttribute('data-post-id');
+      fetch('/save-post/' + postID)
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message); // ganti alert kalau mau
+        })
+        .catch(err => {
+          alert('Error saving post');
+        });
+    });
+  });
+});
+</script>
 </body>
 </html>

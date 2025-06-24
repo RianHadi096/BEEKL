@@ -7,6 +7,7 @@ use App\Models\PostModel;
 use App\Models\UserModel;
 use App\Models\NotificationModel;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\SavedPostModel;
 
 class Post extends BaseController
 {
@@ -70,10 +71,6 @@ class Post extends BaseController
     public function createPostfromProfilePage(){
         //Get Model
         $model = new PostModel();
-        //upload image
-        $image = $this->request->getFile('images');
-        
-
         //upload image
         $image = $this->request->getFile('images');
         if($image->isValid()) {
@@ -146,4 +143,65 @@ class Post extends BaseController
         // Return posts as JSON or pass to a view as needed
         return $this->response->setJSON($posts);
     }
+    public function savePost($postID)
+{
+    if (!session()->get('id')) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Please log in to save posts.'
+        ]);
+    }
+
+    $savePostModel = new SavedPostModel();
+
+    $existing = $savePostModel->where('user_id', session()->get('id'))
+                              ->where('post_id', $postID)
+                              ->first();
+
+    if ($existing) {
+        return $this->response->setJSON([
+            'status' => 'info',
+            'message' => 'You have already saved this post.'
+        ]);
+    }
+
+    if ($savePostModel->insert([
+        'user_id' => session()->get('id'),
+        'post_id' => $postID,
+        'saved_at' => date('Y-m-d H:i:s')
+    ])) {
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Post saved successfully!'
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Error saving post'
+        ]);
+    }
+}
+
+public function viewSavedPosts()
+{
+    $savedPostModel = new \App\Models\SavedPostModel();
+    $postModel = new \App\Models\PostModel();
+
+    // Ambil semua saved post untuk user ini
+    $savedPosts = $savedPostModel
+                    ->where('user_id', session()->get('id'))
+                    ->findAll();
+
+    $posts = [];
+    foreach ($savedPosts as $saved) {
+        $post = $postModel->find($saved['post_id']);
+        if ($post) {
+            $posts[] = $post;
+        }
+    }
+
+    return view('saved_posts', ['posts' => $posts]);
+}
+
+
 }
