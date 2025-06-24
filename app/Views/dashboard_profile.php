@@ -346,6 +346,12 @@ $defaultAvatar = 'https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLs
                     </a>
                 </li>
                 <li>
+                     <a class="dropdown-item" href="/saved-posts">
+                       <i class="fa fa-bookmark me-2"></i> Saved Posts
+                     </a>
+                 </li>
+
+                <li>
                     <a class="dropdown-item" href="logout">
                         <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
                     </a>
@@ -701,6 +707,14 @@ $defaultAvatar = 'https://storage.googleapis.com/a1aa/image/lnxD0awdWAcMn5tsFaLs
                                 </a>
                             </div>
                             <div class="me-3">
+                                <a href="javascript:void(0)" 
+                                class="save-btn text-decoration-none text-dark" 
+                                data-post-id="<?= $post['postID'] ?>"
+                                title="Save this post">
+                                    <i class="fa fa-bookmark me-1"></i>
+                                </a>
+                         </div>
+                            <div class="me-3">
                                 <a href="/deletePost/<?php echo $post['postID']?>" class="link-danger"><i class="fas fa-trash me-1"></i></a>
                             </div>
                             </div>
@@ -946,6 +960,22 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 })();
 </script>
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.save-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const postID = this.getAttribute('data-post-id');
+      fetch('/save-post/' + postID)
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message); // ganti alert kalau mau
+        })
+        .catch(err => {
+          alert('Error saving post');
+        });
+    });
+  });
+});
+</script>
 </body>
 </html>

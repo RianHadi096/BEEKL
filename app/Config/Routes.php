@@ -90,3 +90,7 @@ $routes->group('beeklplus', function($routes) {
 
 // Profile features
 $routes->post('profile/change-avatar', 'ProfileController::changeAvatar', ['filter' => 'auth']);
+// save post
+$routes->get('save-post/(:num)', 'Post::savePost/$1');
+// view save post
+$routes->get('/saved-posts', 'Post::viewSavedPosts');
